@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="426" height="380" type="utility" backgroundColor="#555555" creationComplete="init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			private function init():void {
+				this.nativeWindow.x = Screen.mainScreen.visibleBounds.left - this.width/2 +Screen.mainScreen.visibleBounds.width/2;
+				this.nativeWindow.y = Screen.mainScreen.visibleBounds.top - this.height/2 +Screen.mainScreen.visibleBounds.height/2;
+				var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var ns:Namespace = appXml.namespace();
+				versionNumber.text = title = appXml.ns::name + " " + appXml.ns::versionNumber;
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup horizontalAlign="center">
+		<s:Image width="428" height="295" source="@Embed(source='assets/logoApp/hyde_logo.png')"/>
+		<s:Label fontSize="14" color="#FFFFFF">Created by LA MENAGERIE and ZVVIKS</s:Label>
+		<s:Label id="versionNumber" fontSize="14" color="#FFFFFF"></s:Label>
+	</s:VGroup>
+</s:Window>

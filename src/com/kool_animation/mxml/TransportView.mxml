@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx"  height="30" 
+				   focusEnabled="false" borderVisible="false" borderWeight="0" backgroundAlpha="0">
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.net.sendToURL;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public static const EVENT_GOTO_FIRST:String				= "event_goto_first";
+			public static const EVENT_GOTO_LAST:String				= "event_goto_last";
+			public static const EVENT_GOTO_NEXT:String				= "event_goto_next";
+			public static const EVENT_GOTO_PREV:String				= "event_goto_prev";
+			public static const EVENT_SWITCH_PLAY:String			= "event_switch_play";
+			public static const EVENT_SWITCH_LOOP:String			= "event_swtich_loop";
+			public static const EVENT_FPS_CHANGED:String			= "event_fps_changed";
+			public static const TOOGLE_FULLSCREEN:String			= "TOOGLE_FULLSCREEN";
+			public static const TOOGLE_INCLUDE_LIVEVIEW:String		= "TOOGLE_INCLUDE_LIVEVIEW";
+			
+			[Bindable]
+			public var videoWidth:int
+			[Bindable]
+			public var videoHeight:int;
+			
+			[Bindable]
+			private var playing:Boolean
+			[Bindable]
+			public var namesCamera:ArrayCollection;
+			
+			[Embed(source="assets/pictos/play_over.png")]
+			[Bindable] private var imgPauseClass:Class;
+			
+			[Embed(source="assets/pictos/play_over.png")]
+			[Bindable] private var imgPlayClass:Class;
+			
+			public function initFPS(fps:Number):void{
+				for (var i:int=0; i<fpsComboBox.dataProvider.length; i++){
+					if(fpsComboBox.dataProvider.getItemAt(i)==fps){
+						fpsComboBox.selectedIndex=i;
+					}
+				}
+			}
+			
+			public function setLoopState(state:Boolean):void {
+				if(state) {
+					btonLoop.setStyle("chromeColor","#999999");
+				} else {
+					btonLoop.setStyle("chromeColor","#3C3C3C");
+				}
+			}
+			
+			private function toogleIncludeLiveView():void{
+				dispatchEvent(new Event(TOOGLE_INCLUDE_LIVEVIEW));
+			}
+			
+			public function setPlayState(state:Boolean):void {
+				btonPlay.label=null;
+				//icon="@Embed(source='assets/pictos/play_over.png')"
+				if(state){
+					playing=true;
+					btonPlay.setStyle("chromeColor","#999999");
+				} else {
+					playing=false;
+					btonPlay.setStyle("chromeColor","#3C3C3C");
+				}
+			}
+
+			private function onFirst():void {
+				dispatchEvent(new Event(EVENT_GOTO_FIRST));				
+			}
+			
+			private function onStepbackward():void {
+				dispatchEvent(new Event(EVENT_GOTO_PREV));
+			}
+			
+			private function onPlay():void {
+				dispatchEvent(new Event(EVENT_SWITCH_PLAY));
+			}
+			
+			private function onStepForward():void {
+				dispatchEvent(new Event(EVENT_GOTO_NEXT));
+			}
+			
+			private function onLast():void {
+				dispatchEvent(new Event(EVENT_GOTO_LAST));
+			}
+			
+			private function onLoop():void {
+				dispatchEvent(new Event(EVENT_SWITCH_LOOP));
+			}
+			
+			private function fpsChanged(event:IndexChangeEvent):void {
+				var fps:String=String(fpsComboBox.selectedItem);
+				dispatchEvent(new DataEvent(EVENT_FPS_CHANGED, false, false, fps));
+			}
+			
+			private function onFullscreen():void{
+				dispatchEvent(new Event(TOOGLE_FULLSCREEN));
+			}
+			
+			public function timecode(tc:String):void{
+				tctext.text=tc;
+			}
+		]]>
+	</fx:Script>
+		<s:HGroup width="100%" verticalAlign="middle" gap="-1" focusEnabled="false">
+			<s:Label id="tctext" text="Time : 00h:00m:00s:00ms -- Frame : 0" width="300" color="#FFFFFF"/>
+			<s:BitmapImage id="camera" width="20" height="20"  source="@Embed(source='assets/pictos/camera.png')" alpha=".8"/>
+			<s:CheckBox id="includeLiveViewCheckBox" focusEnabled="false" selected="true" click="toogleIncludeLiveView()" toolTip="{resourceManager.getString('GUI_I18NS', 'include_liveview')}"/>
+			<s:Spacer width="10"/>
+			<mx:Button id="btonFirst" click="onFirst()" fontSize="12" x="330" toolTip="{resourceManager.getString('GUI_I18NS'
+					   ,'first_frame')}" focusEnabled="false" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
+					  icon="@Embed(source='assets/pictos/start_over.png')" width="30"/>
+			<mx:Button id="btonStepbackward"  click="onStepbackward()" fontSize="12" focusEnabled="false" 
+					   toolTip="{resourceManager.getString('GUI_I18NS' ,'previous')}" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
+					  icon="@Embed(source='assets/pictos/back_over.png')" width="30"/>
+			<mx:Button id="btonPlay" click="onPlay()" fontSize="12" x="330" focusEnabled="false" 
+					   toolTip="{resourceManager.getString('GUI_I18NS' ,'play')}" chromeColor="#3C3C3C" cornerRadius="0" height="30" color="#FFFFFF" 
+					   icon="{(playing)?imgPauseClass:imgPlayClass}" width="30"/>
+			<mx:Button id="btonStepForward" click="onStepForward()" 
+					   toolTip="{resourceManager.getString('GUI_I18NS','next')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+					  icon="@Embed(source='assets/pictos/forward_over.png')" cornerRadius="0" height="30"/>
+			<mx:Button id="btonLast" click="onLast()" toolTip="{resourceManager.getString('GUI_I18NS'
+					   ,'end_frame')}" fontSize="11" x="330" width="30" focusEnabled="false" 
+					  icon="@Embed(source='assets/pictos/end_over.png')" cornerRadius="0" height="30" chromeColor="#3C3C3C"/>
+			<mx:Button id="btonLoop" click="onLoop()" toolTip="{resourceManager.getString('GUI_I18NS'
+					   ,'loop')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+					  icon="@Embed(source='assets/pictos/loop_over.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
+			<s:Label text="fps" paddingLeft="5" color="#FFFFFF" height="30" verticalAlign="middle" paddingRight="5"/>
+			<s:DropDownList id="fpsComboBox" selectedIndex="1" width="70" focusEnabled="false" change="fpsChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','fps')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
+				<s:dataProvider>
+					<mx:ArrayList>
+						<fx:Number>4</fx:Number>
+						<fx:Number>6</fx:Number>
+						<fx:Number>8</fx:Number>
+						<fx:Number>12</fx:Number>
+						<fx:Number>12.5</fx:Number>
+						<fx:Number>24</fx:Number>
+						<fx:Number>25</fx:Number>
+						<fx:Number>40</fx:Number>
+						<fx:Number>50</fx:Number>
+						<fx:Number>60</fx:Number>
+					</mx:ArrayList>
+				</s:dataProvider>
+			</s:DropDownList>
+			<s:Spacer width="40"/>
+			<mx:Button id="btonToggle" click="onFullscreen()" toolTip="{resourceManager.getString('GUI_I18NS'
+					   ,'fullscreen')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+								  icon="@Embed(source='assets/pictos/fullscreen.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
+			
+		</s:HGroup>
+</s:BorderContainer>

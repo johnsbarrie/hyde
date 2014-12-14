@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="420" height="240" backgroundColor="#3C3C3C" chromeColor="#919090" color="#FFFFFF"  creationComplete="init();">
+	<s:layout>
+		<s:VerticalLayout gap="10" paddingTop="10" paddingBottom="10" horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Metadata>
+		[Event(name=CaptureAutoWindow.START_CAPTURE, type="fr.animatic.components.CaptureAutoWindow")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public static const START_CAPTURE:String	= "startCapture";
+			public static const STOP_CAPTURE:String		= "stopCapture";
+			
+			private var isPlaying:Boolean = false;
+			
+			private function startCapture():void
+			{
+				if(!isPlaying) {
+					btonDemarrer.label	= resourceManager.getString('GUI_I18NS'
+						,'stop');
+					isPlaying			= true;
+					dispatchEvent(new Event(START_CAPTURE));
+				} else {
+					stopCapturing();
+					dispatchEvent(new Event(STOP_CAPTURE));
+				}
+			}
+			
+			public function stopCapturing():void
+			{
+				btonDemarrer.label	= resourceManager.getString('GUI_I18NS'
+			  ,'start');
+				isPlaying			= false;
+			}
+			
+			public function init():void {
+				delayHoursDesired.textDisplay.editable=false;
+				delaySecondsDesired.textDisplay.editable=false;
+				delayMinutesDesired.textDisplay.editable=false;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Label text="{resourceManager.getString('GUI_I18NS'
+			 ,'delay_between_capture')} :" fontWeight="bold"/>
+	<s:HGroup width="100%" gap="5" horizontalAlign="center" verticalAlign="middle">
+		<s:NumericStepper  id="delayHoursDesired"  maximum="24" minimum="0" color="#000000"/>
+		<s:Label text="{resourceManager.getString('GUI_I18NS'
+				 ,'hours')}" fontSize="11"/>
+		<s:NumericStepper  id="delayMinutesDesired"  maximum="60" minimum="0" color="#000000"/>
+		<s:Label text="{resourceManager.getString('GUI_I18NS'
+				 ,'minutes')}" fontSize="11"/>
+		<s:NumericStepper  id="delaySecondsDesired"  maximum="60" minimum="5" color="#000000"/>
+		<s:Label text="{resourceManager.getString('GUI_I18NS'
+				 ,'seconds')}" fontSize="11"/>
+	</s:HGroup>
+	<s:Button id="btonDemarrer" label="{resourceManager.getString('GUI_I18NS'
+			  ,'start')}" fontSize="11" click="startCapture()" focusEnabled="false"/>
+	
+	
+	
+</s:TitleWindow>

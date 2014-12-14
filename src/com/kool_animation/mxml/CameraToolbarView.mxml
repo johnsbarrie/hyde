@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.kool_animation.event.ObjectEvent;
+			import mx.collections.ArrayCollection;
+			import spark.events.IndexChangeEvent;
+
+			public static const EVENT_ACTIVATE_LIVE_VIDEO:String="event_activate_live_video";
+			public static const EVENT_CAMERA_CHANGED:String="camera_changed";
+			
+			public var oldCameraSelectedIndex:int=0;
+			private var cameraArrayCollection:ArrayCollection;
+			
+			private function setUpCameraInfo ():void {
+				cameraArrayCollection=new ArrayCollection();
+				cameraComboBox.dataProvider = cameraArrayCollection;
+				
+				var cameraDeviceNames:Array=Camera.names;
+				if (cameraDeviceNames.length==0) {
+					cameraComboBox.enabled=false;
+					cameraArrayCollection.addItem(resourceManager.getString('GUI_I18NS', 'no_camera_detected'));
+					
+					cameraComboBox.selectedIndex=0;
+				} else {
+					for (var i:int=0; i<cameraDeviceNames.length; i++) {
+						var camera:String=cameraDeviceNames[i];
+						cameraArrayCollection.addItem(camera)
+					}
+					cameraComboBox.selectedIndex=0;
+					
+					//cameraArrayCollection.addItem(resourceManager.getString('GUI_I18NS', 'refresh_camera_list'))
+					//cameraComboBox.selectedIndex=0;
+				}
+			}
+			
+			private function cameraChanged(evt:IndexChangeEvent):void {
+				/*if(evt.newIndex==cameraArrayCollection.length-1) {
+					cameraComboBox.selectedIndex=oldCameraSelectedIndex;
+					setUpCameraInfo();
+					if(oldCameraSelectedIndex <cameraComboBox.dataProvider.length){
+						cameraComboBox.selectedIndex=oldCameraSelectedIndex;
+					}else{
+						cameraComboBox.selectedIndex=0;
+					}
+				} else {*/
+					var data:Object=new Object();
+					data.cameraNumber=String(evt.newIndex);
+					oldCameraSelectedIndex=evt.newIndex
+					dispatchEvent(new ObjectEvent(EVENT_CAMERA_CHANGED, data));
+				//}
+			}
+			
+			public function init():void{
+				setUpCameraInfo();
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup gap="10" verticalAlign="middle" paddingLeft="10" paddingRight="10" width="100%">
+		<s:DropDownList id="cameraComboBox"  change="cameraChanged(event)" chromeColor="#3C3C3C"  color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939" width="250"/>
+	</s:HGroup>
+</s:Group>

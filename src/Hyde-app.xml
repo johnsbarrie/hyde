@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/3.1">
+	<id>com.lamenagerie.hyde</id>
+
+	<filename>Hyde</filename>
+
+	<name>Hyde Stop Motion</name>
+	
+	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
+	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
+	An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5 . -->
+	<versionNumber>1.0.26</versionNumber>
+	<versionLabel>1.0.26</versionLabel>
+
+	<copyright>La Ménagerie & Zvviks</copyright>
+
+	<initialWindow>
+		
+		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
+		
+		
+		<title>Hyde Stop Motion</title>
+
+		<!-- The window's minimum size, specified as a width/height pair in pixels, such as "400 200". Optional. -->
+		 <minSize>800 800</minSize> 
+	<autoOrients>false</autoOrients>
+        <fullScreen>false</fullScreen>
+        <visible>false</visible>
+    </initialWindow>
+	<icon>
+		<image16x16>assets/logoApp/16_16.png</image16x16>
+		<image32x32>assets/logoApp/32_32.png</image32x32>
+		<image48x48>assets/logoApp/48_48.png</image48x48>
+		<image128x128>assets/logoApp/128_128.png</image128x128>
+	</icon>
+	<allowBrowserInvocation>true</allowBrowserInvocation>
+</application>

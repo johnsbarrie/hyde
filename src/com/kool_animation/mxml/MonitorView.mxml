@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" 
+				   focusEnabled="false" horizontalCenter="center" verticalCenter="center" creationComplete="init()">
+				  <!-- creationComplete="deactivateFocus()"-->
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flash.filters.DropShadowFilter;
+			private var fullscreentimer:Timer;
+			private function init ():void {
+				this.addEventListener (Event.ADDED_TO_STAGE, addedToStage);
+				fullscreentimer=new Timer(50,1);
+				fullscreentimer.addEventListener(TimerEvent.TIMER, fullscreenTimed);
+			}
+			
+			private function addedToStage (evt:Event):void {
+				this.stage.nativeWindow.addEventListener(NativeWindowBoundsEvent.RESIZE, windowResized);
+				gridContainer.addEventListener(Event.RESIZE, updateGUI);	
+				updateGUI(null);
+				this.gridToggled(false);
+			}
+			
+			public function gridToggled(visible:Boolean):void{
+				gridContainer.visible=visible;
+			}
+			
+			private function windowResized(evt:NativeWindowBoundsEvent):void {
+				fullscreentimer.start();
+			}
+			
+			public function fullscreenChanged():void{
+				fullscreentimer.start();
+			}
+			
+			private function fullscreenTimed(evt:Event):void{
+				fullscreentimer.stop();
+				liveContainer.width=frameHolder.width=this.width;
+				liveContainer.height=frameHolder.height=this.height;
+			}
+			
+			private function updateGUI(evt:Event):void {
+				drawGrid();
+				crossHair()
+			}
+			
+			private function drawGrid():void {
+				var division:int = 3;
+				var shadow:DropShadowFilter = new DropShadowFilter(); 
+				shadow.distance = 0; 
+				shadow.angle = 25; 
+				shadow.color=0x000000;
+				
+				grid_holder.filters = [shadow];
+				grid_holder.graphics.clear();
+				grid_holder.graphics.lineStyle(1, 0xFFFFFF);
+				
+				var heightDivision:Number = gridContainer.height / division;
+				var widthDivision:Number = gridContainer.width / division;
+				
+				for ( var i:int=1; i<division; i++) {
+					grid_holder.graphics.moveTo(0, heightDivision*i);
+					grid_holder.graphics.lineTo(gridContainer.width, heightDivision*i);
+					grid_holder.graphics.moveTo(widthDivision*i, 0);
+					grid_holder.graphics.lineTo(widthDivision*i, gridContainer.height);
+				}
+			}
+			
+			private function crossHair():void {
+				var crossHairSize:int=20;
+				var centerPoint:Point = new Point(gridContainer.width/2, gridContainer.height/2);
+				grid_holder.graphics.moveTo(centerPoint.x, centerPoint.y - crossHairSize);
+				grid_holder.graphics.lineTo(centerPoint.x, centerPoint.y + crossHairSize);
+				
+				grid_holder.graphics.moveTo(centerPoint.x - crossHairSize, centerPoint.y);
+				grid_holder.graphics.lineTo(centerPoint.x + crossHairSize, centerPoint.y);
+			}
+		]]>
+	</fx:Script>
+		<s:Group id="frameHolder" focusEnabled="false" width="100%" height="100%" resizeMode="scale">
+			<s:Group id="frameContainer" focusEnabled="false" width="100%" height="100%"/>
+		</s:Group>
+		<s:Group id="liveContainer" focusEnabled="false" width="100%" height="100%" resizeMode="scale">
+			<s:VideoDisplay id="videoDisplay" focusEnabled="false" />
+		</s:Group>
+		<s:Group id="gridContainer" focusEnabled="false" width="100%" height="100%" resizeMode="scale">
+			<s:SpriteVisualElement id="grid_holder" width="100%" height="100%"/>
+		</s:Group>
+</s:BorderContainer>

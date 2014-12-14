@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" backgroundColor="#8C8C8C" creationComplete="init();" width="800" height="600" xmlns:local="*" xmlns:ns="com.kool_animation.mxml.*" xmlns:ns1="com.kool_animation.mxml.window.*">
+	<fx:Metadata>
+		[ResourceBundle("GUI_I18NS")]
+	</fx:Metadata> 
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.kool_animation.AppFacade;
+			
+			private var facade:AppFacade = AppFacade.getInstance();
+			private function init():void {
+				this.nativeWindow.x			= 10;
+				this.nativeWindow.y			= 20;
+				this.nativeWindow.width		= Capabilities.screenResolutionX - 20;
+				this.nativeWindow.height	= Capabilities.screenResolutionY - 40;
+				facade.setup(this, resourceManager);
+				
+				var timer:Timer= new Timer(1,1);
+				timer.addEventListener(TimerEvent.TIMER, waitForStage);
+				timer.start();
+			}
+			
+			private function waitForStage(evt:TimerEvent):void{
+				facade.startup();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<ns1:ProjectWindow id="projectWindow" title="{resourceManager.getString('GUI_I18NS', 'project_manager')}" width="620" height="480"/>
+		<ns1:PreferencesWindow id="preferenceWindow"/>
+		<ns1:TimelapseWindow id="timelapseWindow"  title="{resourceManager.getString('GUI_I18NS', 'timelapse')}"/>
+		<ns1:PhotoBucketWindow id="photoBucketWindow"  title="{resourceManager.getString('GUI_I18NS', 'photobucket')}"/>
+		<ns1:AboutWindow id="aboutWindow"  title="{resourceManager.getString('GUI_I18NS', 'program_name')}" />
+		<ns1:ExportationChoiceWindow id="exportationChoiceWindow"  title="{resourceManager.getString('GUI_I18NS', 'export')}" />
+	</fx:Declarations>
+	<ns:TakeView id="takeView" contentBackgroundColor="#3C3C3C" top="10" width="100%" height="90%"/>
+	<s:Label id="debugLabel"  height="100" width="600" color="#FFFFFF" fontSize="12"  mouseEnabled="false" visible="true"/>
+</s:WindowedApplication>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="30" borderVisible="false" borderWeight="0" >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.SliderEvent;
+			
+			public static const EVENT_CAPTURE:String				= "event_capture";
+			public static const EVENT_AUTOMATISER:String			= "event_automatiser";
+			public static const EVENT_ONIONSKIN_VALUE:String        = "event_onion_skin_value";
+			public static const EVENT_TOGGLE_VIDEO:String			= "event_toggle_video";
+			public static const EVENT_TOGGLE_GRID:String			= "event_toggle_grid";
+			public static const EVENT_TOGGLE_VERTICAL_FLIP:String	= "event_toggle_vertical_flip";
+			public static const EVENT_TOGGLE_HORIZONTAL_FLIP:String	= "event_toggle_horizontal_flip";
+			
+			private function onCapture():void {
+				dispatchEvent(new Event(EVENT_CAPTURE));
+			}
+			
+			private function onAutomatiser():void {
+				dispatchEvent(new Event(EVENT_AUTOMATISER));
+			}
+			
+			private function onGrid():void {
+				dispatchEvent (new Event(EVENT_TOGGLE_GRID));
+			}
+			
+			public function gridToggled(value:Boolean):void {
+				(value) ? gridButton.alpha = 1.0 : gridButton.alpha = 0.5;
+			}
+			
+			private function onVerticalFlip():void {
+				dispatchEvent(new Event(EVENT_TOGGLE_VERTICAL_FLIP));
+			}
+			
+			public function verticalFlipped(value:Boolean):void{
+				(value) ? verticalFlipButton.alpha=1.0 : verticalFlipButton.alpha=.5;
+			}
+
+			private function onHorizontalFlip():void {
+				dispatchEvent(new Event(EVENT_TOGGLE_HORIZONTAL_FLIP));
+			}
+
+			public function horizontalFlipped(value:Boolean):void{
+				(value) ? horizontalFlipButton.alpha=1.0 : horizontalFlipButton.alpha=.5;
+			}			
+			
+			private function onOnionsSliderChanged(event:SliderEvent ):void {
+				dispatchEvent(new DataEvent(EVENT_ONIONSKIN_VALUE, false, false, String(event.value)));
+			}
+			
+			private function changeFocus():void {
+				//btSnapShoot.setFocus();
+			}
+
+			private function onShowLiveView():void {
+				dispatchEvent(new Event(EVENT_TOGGLE_VIDEO));
+			}
+			
+			public function shownLiveViewButtons (state:Boolean):void {
+				onionSkinSlider.visible=state;
+				onionSkinSlider.visible=state;
+				captureComboBox.visible=state;
+				capturebutton.visible=state;
+				timelapsebutton.visible=state;
+				verticalFlipButton.visible=state;
+				horizontalFlipButton.visible=state;
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="30" verticalAlign="middle"  gap="10" paddingLeft="10" paddingRight="10" >
+		<mx:Button id="gridButton" alpha="0.5" icon="@Embed(source='assets/pictos/grid.png')" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'grid')}" click="onGrid()" fontSize="12" focusEnabled="false" chromeColor="#3C3C3C" cornerRadius="0" width="45" height="20"/>
+		<s:Spacer width="10"/>
+		<s:ToggleButton id="btSnapShoot"  toolTip="{resourceManager.getString('GUI_I18NS'
+				  ,'show_live_view')}"  icon="@Embed(source='assets/pictos/camera.png')" click="onShowLiveView ()" height="30" fontSize="12" focusEnabled="false" color="#FFFFFF" cornerRadius="0"/>
+		<mx:Slider id="onionSkinSlider" chromeColor="#FFFFFF" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'onion_skin')}" focusEnabled="false"  mouseUp="changeFocus()" mouseOut="changeFocus()"  labelOffset="30" labels="[0, 100%]" value="100" liveDragging="true" change="onOnionsSliderChanged(event)" minimum="0" maximum="100" width="80" height="30"/>
+		<s:Spacer width="40"/>
+		<s:DropDownList id="captureComboBox"  toolTip="{resourceManager.getString('GUI_I18NS' ,'capture_quantity')}" selectedIndex="0" width="50" focusEnabled="false" chromeColor="#3C3C3C"  color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939" height="20">
+			<s:dataProvider>
+				<mx:ArrayList>
+					<fx:Number>1</fx:Number>
+					<fx:Number>2</fx:Number>
+					<fx:Number>3</fx:Number>
+					<fx:Number>4</fx:Number>
+					<fx:Number>5</fx:Number>
+					<fx:Number>6</fx:Number>
+					<fx:Number>7</fx:Number>
+					<fx:Number>8</fx:Number>
+				</mx:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList>
+		<s:Button id="capturebutton" icon="@Embed(source='assets/pictos/capture.png')" toolTip="{resourceManager.getString('GUI_I18NS'
+				  ,'capture')}"  click="onCapture()" fontSize="12" focusEnabled="false" cornerRadius="0" chromeColor="#DD0000" color="#FFFFFF" height="40" width="40" />
+		<mx:Button id="verticalFlipButton" alpha="0.5" icon="@Embed(source='assets/pictos/vertical_flip.png')" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'vertical_flip')}" click="onVerticalFlip()" fontSize="12" focusEnabled="false" chromeColor="#3C3C3C" cornerRadius="0" width="45" height="20"/>
+		<mx:Button id="horizontalFlipButton" alpha="0.5" icon="@Embed(source='assets/pictos/horizontal_flip.png')" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'horizontal_flip')}" click="onHorizontalFlip()" fontSize="12" focusEnabled="false" chromeColor="#3C3C3C" cornerRadius="0" width="45" height="20"/>
+		<s:Spacer width="40"/>
+		<mx:Button id="timelapsebutton" icon="@Embed(source='assets/pictos/timelapse.png')" toolTip="{resourceManager.getString('GUI_I18NS'
+				  ,'timelapse')}" click="onAutomatiser()" fontSize="12" focusEnabled="false" chromeColor="#3C3C3C"  cornerRadius="0" height="30"/>
+	</s:HGroup>
+</s:BorderContainer>

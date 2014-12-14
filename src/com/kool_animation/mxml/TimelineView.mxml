@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" focusEnabled="false" borderVisible="false" height="150" backgroundColor="#9D9D9D" dropShadowVisible="false" borderWeight="0" backgroundAlpha="0.0">
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.kool_animation.mxml.TimelineItemRenderer;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.components.List;
+			import spark.events.IndexChangeEvent;
+			
+			public static const EVENT_COPY:String					= "event_copy";
+			public static const EVENT_PASTE:String				    = "event_reverse_paste";
+			public static const EVENT_REVERSE_PASTE:String			= "event_paste";
+			
+			public static const EVENT_CUT:String					= "event_cut";
+			public static const EVENT_DELETE:String				    = "event_delete";
+			public static const EVENT_REVERSE:String				= "event_reverse";
+			public static const EVENT_DUPLICATE:String		 	    = "event_duplicate";
+			public static const EVENT_IMPORT:String				    = "event_import";
+			public static const EVENT_SELECT_FRAME_CHANGED:String   = "select_frame_changed";
+			
+			public var list:List;
+			private var _frameArrayCollection:ArrayCollection;
+			
+			private function onChange(evt:IndexChangeEvent):void {
+				dispatchEvent(new Event(EVENT_SELECT_FRAME_CHANGED));
+			}
+			
+			private function initContextMenu():void {
+				var viewContextMenu:ContextMenu	= new ContextMenu();
+				list.contextMenu = viewContextMenu;
+				
+				var copyItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'copy'));
+				copyItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doCopyCmd);
+				viewContextMenu.customItems.push(copyItem);
+				
+				var cutItem:ContextMenuItem	= new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'cut'));
+				cutItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doCutCmd);
+				viewContextMenu.customItems.push(cutItem);
+				
+				var pasteItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'paste'));
+				pasteItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteCmd);
+				viewContextMenu.customItems.push(pasteItem);
+				
+				var pasteInverserItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'inverse_paste'));
+				pasteInverserItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteInverserCmd);
+				viewContextMenu.customItems.push(pasteInverserItem);
+				
+				var deleteItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'delete'));
+				deleteItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doDeleteCmd);
+				deleteItem.separatorBefore = true;
+				viewContextMenu.customItems.push(deleteItem);
+				
+				var inverseItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'inverse'));
+				inverseItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doInverseCmd);
+				inverseItem.separatorBefore = true;
+				viewContextMenu.customItems.push(inverseItem);
+				
+				var duplicateItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'duplicate'));
+				duplicateItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doDuplicateCmd);
+				viewContextMenu.customItems.push(duplicateItem);
+				
+				var importItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'import_image'));
+				importItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doImportCmd);
+				importItem.separatorBefore = true;
+				viewContextMenu.customItems.push(importItem);	
+			}
+			
+			public function set frameArrayCollection ( frameArrayCollection:ArrayCollection ):void {
+				_frameArrayCollection=frameArrayCollection;
+				createNewList();
+			}
+			
+			public function refresh():void {
+				var indices:Vector.<int> = list.selectedIndices;
+				createNewList();
+				list.selectedIndices = indices;
+			}
+			
+			private function createNewList():void{
+				if (list) { this.removeElement(list); }
+				
+				list=new TimeLineList();
+				list.focusEnabled=false;
+				list.arrowKeysWrapFocus=false;
+				list.addEventListener ( IndexChangeEvent.CHANGE, onChange );
+				list.percentWidth=100;
+				list.height=150;
+				list.allowMultipleSelection=true;
+				list.dataProvider=_frameArrayCollection;
+				list.setStyle("rollOverColor", "#565656");
+				list.setStyle("selectionColor", "#A39448");
+				list.itemRenderer = new ClassFactory(TimelineItemRenderer);
+				
+				this.addElement(list);
+				initContextMenu()
+				list.setFocus();
+			}
+			
+			private function doCopyCmd(e:ContextMenuEvent):void { dispatchEvent (new Event(EVENT_COPY)); }
+			private function doPasteCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_PASTE)); }
+			private function doPasteInverserCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_REVERSE_PASTE)); }
+			private function doCutCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_CUT)); }
+			private function doDeleteCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_DELETE)); }
+			private function doInverseCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_REVERSE)); }
+			private function doDuplicateCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_DUPLICATE)); }
+			private function doImportCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_IMPORT)); }
+		]]>
+	</fx:Script>
+	<!-- dataProvider="{frameArrayCollection}" -->
+	<!-- <s:List id="frameList" width="100%" borderVisible="false" height="150" contentBackgroundColor="#9D9D9D" borderColor="#9D9D9D" chromeColor="#9D9D9D"/> -->
+</s:BorderContainer>

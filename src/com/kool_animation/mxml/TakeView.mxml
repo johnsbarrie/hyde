@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:ns="com.kool_animation.mxml.*"
+		  width="100%" height="100%" creationComplete="init()" >
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flash.events.TimerEvent;
+			import spark.components.Group;
+			
+			private var timer:Timer= new Timer(1,1);
+			public var ratio:Number;
+			private var timelineeditionholder:Group;
+			public static const EVENT_ZOOM_IN:String  = "event_zoom_in";
+			public static const EVENT_ZOOM_OUT:String = "event_zoom_out";
+			public static const EVENT_IMPORT_SOUND:String = "EVENT_IMPORT_SOUND";
+			
+			private function init():void{
+				timer.addEventListener(TimerEvent.TIMER, addedToStage);
+				timer.start();
+			}
+			
+			private function addedToStage(evt:TimerEvent):void {
+				// TODO : prendre en compte le ratio du projet, c'est n'importe quoi ca
+				ratio = resizeableMonitorHolder.width / resizeableMonitorHolder.height;
+				resizeMonitor()
+				this.stage.nativeWindow.addEventListener(NativeWindowBoundsEvent.RESIZE, windowResized);
+			}
+			
+			private function windowResized(evt:NativeWindowBoundsEvent):void {
+				resizeMonitor();
+			}
+			
+			public function resizeMonitor():void{
+				if (this.stage) {
+					var maxHeight:Number =  this.stage.stageHeight - transportHolder.height - timelineHolder.height - 10- cameraControlHolder.height -liveViewBar.height -8 -timelineView.height - bottomHolder.height;	// Hauteur max disponible
+					var maxWidth:Number = this.stage.stageWidth;	// Largeur max disponnible
+					var holderRatio:Number = maxWidth / maxHeight;
+					// Si hauteur base
+					if (holderRatio > ratio) {
+						resizeableMonitorHolder.width = maxHeight * ratio;
+						resizeableMonitorHolder.height = maxHeight;
+						transportHolder.width = maxHeight * ratio;
+						cameraControlHolder.width=  maxHeight * ratio;
+					}
+					// Si largeur base
+					else {
+						resizeableMonitorHolder.width = maxWidth;
+						resizeableMonitorHolder.height = maxWidth / ratio;
+						transportHolder.width = maxWidth ;
+						cameraControlHolder.width= maxWidth;
+					}
+				}
+			}
+			
+			public function setUpForFullScreen():void{
+				if (this.stage){
+					this.timelineeditionholder = timeline_editionbarholder;
+					VGroup(timeline_editionbarholder.parent).removeElement(timeline_editionbarholder);
+					var maxHeight:Number =  this.stage.stageHeight - transportHolder.height - cameraControlHolder.height -liveViewBar.height -38  ;	// Hauteur max disponible
+					var maxWidth:Number = this.stage.stageWidth;	// Largeur max disponnible
+					var holderRatio:Number = maxWidth / maxHeight;
+					
+					// Si hauteur base
+					if (holderRatio > ratio) {
+						resizeableMonitorHolder.width = maxHeight * ratio;
+						resizeableMonitorHolder.height = maxHeight;
+						transportHolder.width = maxHeight * ratio;
+						cameraControlHolder.width=  maxHeight * ratio;
+					} else {
+						resizeableMonitorHolder.width = maxWidth;
+						resizeableMonitorHolder.height = maxWidth / ratio;
+						transportHolder.width = maxWidth ;
+						cameraControlHolder.width= maxWidth;
+					}
+				}
+			}
+			
+			public function leavefullscreen():void{
+				holder.addElement(this.timelineeditionholder);
+				resizeMonitor()
+			}
+			
+			private function zoomOut ():void {
+				dispatchEvent(new Event( EVENT_ZOOM_OUT ));	
+			}
+			
+			private function zoomIn ():void {
+				dispatchEvent(new Event( EVENT_ZOOM_IN ));	
+			}
+			
+			private function importSound():void{
+				dispatchEvent(new Event( EVENT_IMPORT_SOUND));				
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup id="holder" width="100%" height="100%" gap="0" horizontalAlign="center" paddingBottom="0" paddingTop="0">
+		<s:BorderContainer id="cameraControlHolder" borderVisible="false" width="100%" height="22" backgroundColor="#565656">
+			<s:HGroup paddingTop="5" horizontalAlign="center" width="100%" height="18">
+				<s:Label id="title_info" text="" fontSize="14" color="#ECECEC"/>
+			</s:HGroup>
+			<ns:CameraToolbarView id="cameraToolbarView" width="50%"/>
+		</s:BorderContainer>
+		<!-- monitor and controls -->
+		<s:VGroup id="resizeableMonitorHolder" gap="0" height="9" width="16" horizontalAlign="center" >
+			<s:BorderContainer width="100%" height="100%" borderColor="#565656" >
+				<ns:MonitorView id="monitorView" backgroundAlpha="1.0" borderVisible="false" chromeColor="0" width="100%" height="100%" backgroundColor="#000000"/>
+			</s:BorderContainer>
+		</s:VGroup>	
+		<s:BorderContainer id="transportHolder" borderVisible="false" width="100%" height="80" backgroundColor="#565656">
+			<s:VGroup width="100%" >
+				<s:HGroup horizontalAlign="center" width="100%">
+					<s:HGroup horizontalAlign="center" >
+						<ns:TransportView id="transportView" height="30" />
+					</s:HGroup>
+				</s:HGroup>
+				<s:BorderContainer height="3" width="100%" backgroundColor="#AAAAAA" />
+				<s:HGroup horizontalAlign="center" width="100%">
+					<s:HGroup horizontalAlign="center">
+						<ns:LiveViewBar id="liveViewBar" backgroundAlpha="0"/>
+					</s:HGroup>
+				</s:HGroup>
+			</s:VGroup>
+		</s:BorderContainer>
+		<!-- end monitor and controls -->
+		<s:Spacer height="5"/>
+		<s:VGroup id="timeline_editionbarholder" width="100%" height="100%" horizontalAlign="center" verticalAlign="bottom" verticalCenter="bottom" paddingTop="0" gap="0"  bottom="0" >
+			<s:BorderContainer id="timelineHolder" borderVisible="false" width="100%" height="30" backgroundColor="#565656">
+				<s:HGroup width="100%" verticalAlign="middle" height="30">
+					<ns:EditionToolBarView id="editionToolbarView" horizontalCenter="0" width="50%"/>
+					<s:Spacer width="100"/>
+				</s:HGroup>
+			</s:BorderContainer>
+			<s:HGroup width="100%">
+				<ns:TimelineView id="timelineView" x="0" width="100%" height="150" backgroundColor="#9D9D9D" bottom="0"/>
+				<s:BorderContainer  borderVisible="false" width="100" height="150" backgroundColor="#565656" horizontalCenter="center">
+					<s:VGroup>
+						<s:Spacer height="10"/>
+						<s:HGroup width="65" horizontalCenter="center" horizontalAlign="center">
+							<s:Spacer width="30"/>
+							<mx:Button width="30" toolTip="{resourceManager.getString('GUI_I18NS' ,'zoom_out')}" icon="@Embed(source='assets/pictos/minus.png')" fontSize="12" click="zoomOut()" chromeColor="#3C3C3C" height="20" cornerRadius="0" focusEnabled="false"/>
+							<mx:Button width="30" toolTip="{resourceManager.getString('GUI_I18NS' ,'zoom_in')}" icon="@Embed(source='assets/pictos/plus.png')" fontSize="12" click="zoomIn()" chromeColor="#3C3C3C" height="20" cornerRadius="0" focusEnabled="false"/>
+						</s:HGroup>
+						<s:Spacer height="10"/>
+						<s:HGroup width="65" horizontalCenter="center" horizontalAlign="center">
+							<s:Spacer width="30"/>
+							<mx:Button width="30" toolTip="{resourceManager.getString('GUI_I18NS' ,'import_sound')}" icon="@Embed(source='assets/pictos/sound.png')" fontSize="12" click="importSound()" chromeColor="#3C3C3C" height="20" cornerRadius="0" focusEnabled="false"/>
+						</s:HGroup>
+					</s:VGroup>
+				</s:BorderContainer>
+			</s:HGroup>
+			<s:BorderContainer id="bottomHolder" borderVisible="false" width="100%" height="20" backgroundColor="#565656"/>
+		</s:VGroup>
+	</s:VGroup>
+</s:Group>

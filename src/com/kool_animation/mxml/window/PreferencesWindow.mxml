@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"  width="500" height="200" backgroundColor="#3C3C3C" chromeColor="#919090">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.kool_animation.event.ObjectEvent;
+			import mx.events.CloseEvent;
+			
+			public static const EVENT_WORKSPACE_CHANGED:String = "workspace_changed";
+			public static const LANGUAGECHANGED:String = "LANGUAGECHANGED";
+			private var languageIndex:int = 0;
+			
+			public function init(workSpace:String):void {
+				workSpaceText.text = workSpace;
+				localeComboBox.selectedIndex=languageIndex;
+			}
+			
+			private function onChangeWorkSpace():void {
+				var browseForWorkSpace:File = new File();
+				browseForWorkSpace.addEventListener(Event.SELECT, workSpaceSelected);
+				browseForWorkSpace.browseForDirectory(resourceManager.getString('GUI_I18NS', 'select_a_folder_for_your_projects'));
+			}
+			
+			private function workSpaceSelected(evt:Event):void {
+				var workSpaceFile:File = evt.target as File;
+				var data:Object=new Object();
+				workSpaceText.text=workSpaceFile.nativePath;
+				data.workSpace=workSpaceFile.nativePath;
+				dispatchEvent(new ObjectEvent(EVENT_WORKSPACE_CHANGED, data)); 
+			}
+			
+			private function closeWindow():void {
+				dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+			}
+			
+			[Bindable]
+			private var locales:Array = [{label:"English", locale:"en_US"},
+				{label:"Français", locale:"fr_FR"}, {label:"Espagnol", locale:"es_ES"}, {label:"Slovenščina", locale:"sl_SL"}];	
+			
+			private function comboChangeHandler():void {
+				resourceManager.localeChain = [localeComboBox.selectedItem.locale];
+				dispatchEvent (new ObjectEvent( LANGUAGECHANGED, localeComboBox.selectedItem.locale));
+			}
+			
+			public function setLanguage(lang:String):void {
+				for(var i:int=0; i< locales.length; i++){
+					if (locales[i].locale==lang){
+						languageIndex=i;
+					}
+				}
+				
+				resourceManager.localeChain = [lang];
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup contentBackgroundColor="#707070" width="500" x="0" paddingLeft="20">
+		<s:BorderContainer x="0" y="0" width="478" height="55" backgroundColor="#3C3C3C" borderVisible="false">
+			<s:Label x="0" y="0" text="{resourceManager.getString('GUI_I18NS'
+					 ,'preferences')}" fontSize="14" fontWeight="normal" fontFamily="Verdana"  backgroundColor="#3C3C3C" color="#FFFFFF" paddingTop="10"/>
+		</s:BorderContainer>
+			<s:HGroup>
+				<s:Label x="23" y="108" text="{resourceManager.getString('GUI_I18NS'
+						 ,'language')} : "  fontFamily="Verdana"   color="#FFFFFF"/>
+				<mx:ComboBox id="localeComboBox" 
+						 dataProvider="{locales}" change="comboChangeHandler()"/>
+			</s:HGroup>
+			<s:Spacer height="10"/>
+			<s:HGroup width="100%" height="100%" verticalAlign="middle">
+				<s:Label x="23" y="108" text="{resourceManager.getString('GUI_I18NS'
+						 ,'workspace')}" fontFamily="Verdana"   color="#FFFFFF"/>
+				<s:Button label="{resourceManager.getString('GUI_I18NS'
+						  ,'change_workspace')}" click="onChangeWorkSpace()" chromeColor="#3C3C3C" color="#FFFFFF"/>
+				<s:Label id="workSpaceText" x="23" y="108" text="" click="onChangeWorkSpace()" width="262" color="#FFFFFF"/>
+			</s:HGroup>	
+			<s:HGroup width="100%" height="100%" horizontalAlign="right" verticalAlign="bottom" paddingRight="40">
+				<s:Button label="{resourceManager.getString('GUI_I18NS'
+						  ,'done')}" chromeColor="#3C3C3C" click="closeWindow()"  color="#FFFFFF" focusEnabled="false"/>
+			</s:HGroup>
+	</s:VGroup>
+</s:TitleWindow>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			
+			public static const EVENT_COPY:String="copy";
+			public static const EVENT_CUT:String="cut";
+			public static const EVENT_PASTE:String="paste";
+			public static const EVENT_REVERSE:String="reverse";
+			public static const EVENT_REVERSEPASTE:String="reversepaste";
+			public static const EVENT_DELETE:String="delete";
+			public static const EVENT_OPEN_PHOTO_BUCKET:String="EVENT_OPEN_PHOTO_BUCKET";
+			public static const EVENT_EXPORT:String="EVENT_EXPORT";
+			
+			private function copyImage():void{
+				dispatchEvent(new Event(EVENT_COPY));
+			}
+			
+			private function cutImage():void{
+				dispatchEvent(new Event(EVENT_CUT));
+			}
+			
+			private function pasteImage():void{
+				dispatchEvent(new Event(EVENT_PASTE));
+			}
+			
+			private function reversePasteImage():void{
+				dispatchEvent(new Event(EVENT_REVERSEPASTE));
+			}
+			
+			private function inverserImage():void{
+				dispatchEvent(new Event(EVENT_REVERSE));
+			}
+			
+			private function deleteImage():void {
+				dispatchEvent(new Event(EVENT_DELETE));
+			}
+
+			private function openRushes():void {
+				dispatchEvent(new Event(EVENT_OPEN_PHOTO_BUCKET));
+			}
+			
+			public function setImageControlsState(enabled:Boolean):void{
+				btnCopy.enabled=enabled;	
+				btnCut.enabled=enabled;
+				btnPaste.enabled=enabled;
+				btnPasteInverser.enabled=enabled;
+				btnInverser.enabled=enabled;
+				btnSupprimer.enabled=enabled;
+			}
+			
+			public function export():void{
+				dispatchEvent(new Event(EVENT_EXPORT));
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup gap="-1"  focusEnabled="false">
+		<mx:Button id="btnCopy" toolTip="{resourceManager.getString('GUI_I18NS' ,'copy')}" icon="@Embed(source='assets/pictos/copy.png')" fontSize="12" click="copyImage()" chromeColor="#3C3C3C" height="20" cornerRadius="0" focusEnabled="false"/>
+		<mx:Button id="btnCut" toolTip="{resourceManager.getString('GUI_I18NS' ,'cut')}" icon="@Embed(source='assets/pictos/cut.png')" fontSize="12" click="cutImage()"  chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" focusEnabled="false"/>
+		<mx:Button id="btnPaste" toolTip="{resourceManager.getString('GUI_I18NS' ,'paste')}" icon="@Embed(source='assets/pictos/paste.png')" fontSize="12" click="pasteImage()" focusEnabled="false" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" />
+		<mx:Button id="btnPasteInverser" toolTip="{resourceManager.getString('GUI_I18NS' ,'inverse_paste')}" icon="@Embed(source='assets/pictos/reverse_paste.png')" fontSize="12" click="reversePasteImage()" focusEnabled="false" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0"/>
+		<s:Spacer width="40"/>
+		<mx:Button id="btnInverser" toolTip="{resourceManager.getString('GUI_I18NS' ,'inverse')}" icon="@Embed(source='assets/pictos/reverse.png')" fontSize="12" click="inverserImage()" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" focusEnabled="false"/>
+		<mx:Button id="btnSupprimer" toolTip="{resourceManager.getString('GUI_I18NS' ,'delete')}" icon="@Embed(source='assets/pictos/delete.png')" fontSize="12" click="deleteImage()" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" focusEnabled="false"/>
+		<s:Spacer width="40"/>
+		<mx:Button toolTip="{resourceManager.getString('GUI_I18NS' ,'photo_bucket')}" icon="@Embed(source='assets/pictos/photobucket.png')" fontSize="12" click="openRushes()" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" focusEnabled="false"/>
+		<s:Spacer id="spacer" width="150" horizontalCenter="right"/>
+		<mx:Button id="exportBtn" click="export()" toolTip="{resourceManager.getString('GUI_I18NS', 'export_film')}" focusEnabled="false" chromeColor="#3C3C3C" height="20" color="#FFFFFF" cornerRadius="0" icon="@Embed(source='assets/pictos/export.png')" />
+	</s:HGroup>
+</s:Group>

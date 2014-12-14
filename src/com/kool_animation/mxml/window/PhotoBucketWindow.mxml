@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  backgroundColor="#565656" chromeColor="#3C3C3C" width="500" height="500" color="#FFFFFF">
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" gap="2" paddingBottom="2"/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+	
+			public static const INSERT_VIEWS_SELECTED:String	= "importViewsSelected";
+			public static const PREVIEW:String					= "preview";
+			
+			[Bindable]
+			public var dataViewsList:ArrayCollection;
+			
+			private function importViews():void {
+				if(viewsList.selectedItem) dispatchEvent(new Event(INSERT_VIEWS_SELECTED));
+			}
+			
+			private function onSelect():void {
+				if(viewsList.selectedItem) dispatchEvent(new Event(PREVIEW));
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<s:BorderContainer x="0" y="0" width="100%" height="55" backgroundColor="#3C3C3C">
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" paddingLeft="10"/>
+		</s:layout>
+		<s:VGroup width="90%" height="100%" verticalAlign="middle">
+			<s:Label text="{resourceManager.getString('GUI_I18NS' ,'insert_image_in_timeline')}" fontSize="14" fontWeight="normal" fontFamily="Verdana"  color="#FFFFFF"/>
+			<s:Label text="{resourceManager.getString('GUI_I18NS' ,'selection_one_or_more_images_to_insert')}" fontSize="12" fontWeight="normal" fontFamily="Verdana" color="#FFFFFF"/>
+		</s:VGroup>
+	</s:BorderContainer>
+	<s:HGroup width="100%" height="100%" verticalAlign="top" >
+		<s:List id="viewsList" labelField="name" width="100%" height="100%" 
+				dataProvider="{dataViewsList}" itemRenderer="com.kool_animation.mxml.TimelineItemRenderer" allowMultipleSelection="true"
+				contentBackgroundColor="#F4F1F1" borderVisible="false"
+				click="onSelect()" contentBackgroundAlpha="0.0" focusEnabled="false">
+			<s:layout>
+				<s:TileLayout requestedColumnCount="7" horizontalGap="0" verticalGap="10" />
+			</s:layout>
+		</s:List>
+	</s:HGroup>
+	<mx:Button toolTip="{resourceManager.getString('GUI_I18NS' ,'inserer_image')}" click="importViews()" chromeColor="#3C3C3C" color="#FFFFFF" focusEnabled="false" icon="@Embed(source='assets/pictos/filmstrip.png')"/>
+</s:TitleWindow>

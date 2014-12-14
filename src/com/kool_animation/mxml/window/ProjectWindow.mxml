@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="500" chromeColor="#8C8C8C" backgroundColor="#8C8C8C">
+	<fx:Metadata>
+		[ResourceBundle("GUI_I18NS")]
+	</fx:Metadata> 
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			import spark.events.GridItemEditorEvent;
+			import spark.events.TitleWindowBoundsEvent;
+			
+			[Bindable]
+			private var projectListData:ArrayCollection;
+			[Bindable]
+			private var shotListData:ArrayCollection;
+			[Bindable]
+			private var takeListData:ArrayCollection;
+			private var forcingDatagridSelect:Boolean;
+			private var beforeEditingName:String;
+			private var workspace:String;
+
+			public static const CREATE_PROJECT:String 	="CREATE_PROJECT";
+			public static const PROJECT_SELECTED:String =  "PROJECT_SELECTED";
+			public static const CREATE_SHOT:String="CREATE_SHOT";
+			public static const SHOT_SELECTED:String =  "SHOT_SELECTED";
+			public static const OPEN_TAKE:String="OPEN_TAKE";
+			public static const CREATE_TAKE:String="CREATE_TAKE";
+			public static const TAKE_SELECTED:String =  "TAKE_SELECTED";
+			
+			public function init():void {
+				projectListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_START, announceEditStart);
+				projectListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE, announceEditEnd);
+				shotListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_START, announceEditStart);
+				shotListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE, announceEditEnd);
+				takeListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_START, announceEditStart);
+				takeListView.addEventListener(GridItemEditorEvent.GRID_ITEM_EDITOR_SESSION_SAVE, announceEditEnd);
+				
+				projectCreationInput.addEventListener(KeyboardEvent.KEY_DOWN, down);
+				shotCreationInput.addEventListener(KeyboardEvent.KEY_DOWN, down);
+				takeCreationInput.addEventListener(KeyboardEvent.KEY_DOWN, down);
+			}
+			
+			public function setWithWorkSpace(workspace:String):void{
+				this.workspace=workspace;
+				projectCreationInput.text="";
+				createProjectButton.visible=true;
+				shotCreationInput.text="";
+				shotCreationInput.visible=false;
+				shotCreationButton.visible=false;
+				takeCreationInput.visible=false;
+				takeCreationInput.text="";
+				takeCreationButton.visible=false;
+				projectList(new File(workspace));
+			}
+			
+			private function down(evt:KeyboardEvent):void{
+				if(evt.charCode == 13){
+					switch( evt.currentTarget){
+						case projectCreationInput :
+							if (createProjectButton.enabled) {
+								createProject();
+							}
+							break;
+						case shotCreationInput :
+							if (shotCreationButton.enabled) {
+								createShot();
+							}
+							
+							break;
+						case takeCreationInput :
+							if (takeCreationButton.enabled) {
+								createTake();
+							}
+							break;
+					}
+				}
+			}
+			
+			private function announceEditStart(event:GridItemEditorEvent):void {
+				switch (event.target){
+					case (projectListView):
+						beforeEditingName = projectListData.getItemAt(projectListView.selectedIndex)["name"];
+						break;
+					case (shotListView):
+						beforeEditingName = shotListData.getItemAt(shotListView.selectedIndex)["name"];
+						break;
+					case (takeListView):
+						beforeEditingName = takeListData.getItemAt(takeListView.selectedIndex)["name"];
+						break;
+				}
+			}
+			
+			private function announceEditEnd(event:GridItemEditorEvent):void{
+				var listData:ArrayCollection;
+				var listView:DataGrid;
+				var url:String;
+				switch (event.target){
+					case (projectListView):
+						listData=projectListData;
+						listView= projectListView;
+						url=workspace;
+						break;
+					case (shotListView):
+						listData = shotListData;
+						listView = shotListView;
+						url=File(projectListData.getItemAt(projectListView.selectedIndex)["file"]).nativePath+"/shots"
+						break;
+					case (takeListView):
+						listData = takeListData;
+						listView = takeListView;
+						url=File(shotListData.getItemAt(shotListView.selectedIndex)["file"]).nativePath+"/takes";
+						break;
+				}
+				
+				var editedName:String = listData.getItemAt(listView.selectedIndex)["name"];
+				if(editedName == beforeEditingName){ return; }
+				if(editedName ==""){ 
+					listData.getItemAt(listView.selectedIndex)["name"]=beforeEditingName;
+					return;
+				}
+				
+				var fileArray:Array = new File(url).getDirectoryListing();
+				for each (var project:File in fileArray){
+					if(project.name==editedName){
+						listData.getItemAt(listView.selectedIndex)["name"]=beforeEditingName;
+						
+						Alert.show('Choisir une autre nom.', '"'+editedName+'" exist déjà !', Alert.OK);
+						return;
+					}
+				}
+				var selectedIndex:uint=listView.selectedIndex;
+				var folderToBeChanged:File = listData.getItemAt(listView.selectedIndex)["file"];
+				
+				var renamedFile:File=new File(folderToBeChanged.parent.nativePath+"/"+editedName);
+				if(beforeEditingName.toLowerCase() == editedName.toLowerCase()){
+					var tmpFile:File=new File(folderToBeChanged.parent.nativePath+"/"+editedName+"tmp");
+					folderToBeChanged.moveTo(tmpFile);
+					tmpFile.moveTo(renamedFile);					
+				}else{
+					folderToBeChanged.moveTo(renamedFile);
+				}
+				
+				listData.getItemAt(listView.selectedIndex)["file"]=renamedFile;
+				
+				switch (event.target){
+					case (projectListView):
+						projectSelected();
+						break;
+					case (shotListView):
+						shotSelected();
+						break;
+					case (takeListView):
+						takeSelected();
+						break;
+				}
+			}
+			
+			private function projectList(projectFolder:File):Array {
+				var files:Array = projectFolder.getDirectoryListing();
+				var projectFiles:Array= new Array();
+				
+				for (var i:uint = 0; i < files.length; i++) {
+					if(files[i].name!=".DS_Store"){
+						var obj:Object=new Object();
+						obj["name"]=File(files[i]).name;
+						obj["file"]=files[i];
+						projectFiles.push(obj);
+					}
+				}
+				
+				if (projectFiles.length==0) {
+					listPanel.visible=false; logo_holder.visible=true 
+				} else {
+					listPanel.visible=true; 
+					if(vgroup.containsElement(logo_holder)){
+						vgroup.removeElement(logo_holder); 
+					}
+				} 
+				projectListData = new ArrayCollection(projectFiles);
+				shotListData=null;
+				takeListData=null;
+				shotListView.visible=takeListView.visible=preview.visible=false;
+				return projectFiles;
+			}
+			
+			private function shotList(shotFolder:File):Array {
+				var shots:Array = shotFolder.getDirectoryListing();
+				var shotsFiles:Array= new Array();
+				for (var i:uint = 0; i < shots.length; i++) {
+					if(shots[i].name!=".DS_Store"){
+						var obj:Object=new Object();
+						obj["name"]=File(shots[i]).name;
+						obj["file"]=shots[i];
+						shotsFiles.push(obj);
+					}
+				}
+				
+				shotListData=new ArrayCollection(shotsFiles);
+				takeListData=null;
+				shotListView.visible=true;
+				takeListView.visible = preview.visible=false;
+				return shotsFiles;
+			}
+			
+			private function takeList(takeFolder:File):Array {
+				var takes:Array = takeFolder.getDirectoryListing();
+				var takesFiles:Array= new Array();
+				for (var i:uint = 0; i < takes.length; i++) {
+					if(takes[i].name!=".DS_Store"){
+						var obj:Object=new Object();
+						obj["name"]=File(takes[i]).name;
+						obj["file"]=takes[i];
+						takesFiles.push(obj);
+					}
+				}
+				takeListData=new ArrayCollection(takesFiles);
+				shotListView.visible=takeListView.visible=true;
+				preview.visible=false;
+				
+				return takesFiles;
+			}
+			
+			private function projectSelected():void {
+				var shotsFolder:File = new File( File(projectListData.getItemAt(projectListView.selectedIndex)["file"]).nativePath+"/shots");
+				if(shotsFolder.exists) {
+					shotList(shotsFolder);
+					projectCreationInput.text=projectListData.getItemAt(projectListView.selectedIndex)["name"];
+					if(!forcingDatagridSelect){
+						refreshInput(projectCreationInput);
+						forcingDatagridSelect=false;
+					}
+					
+					shotCreationInput.text="";
+					shotCreationInput.visible=true;
+					shotCreationButton.visible=true;
+					takeCreationInput.visible=false;
+					takeCreationButton.visible=false;
+				}
+				dispatchEvent(new Event(PROJECT_SELECTED));
+			}
+			
+			private function shotSelected():void {
+				var takesFolder:File = new File(File(shotListData.getItemAt(shotListView.selectedIndex)["file"]).nativePath+"/takes");
+				if(takesFolder.exists) {
+					shotCreationInput.text = shotListData.getItemAt(shotListView.selectedIndex)["name"];
+					if(!forcingDatagridSelect){
+						refreshInput (shotCreationInput);
+						forcingDatagridSelect=false;
+					}
+					
+					takeCreationInput.text="";
+					shotCreationInput.visible=true;
+					shotCreationButton.visible=true;
+					takeCreationInput.visible=true;
+					takeCreationButton.visible=true;
+					takeList(takesFolder);
+				}
+				dispatchEvent(new Event(SHOT_SELECTED));
+			}
+			
+			private function takeSelected():void {
+
+				preview.visible=true;
+				takeCreationInput.text = takeListData.getItemAt(takeListView.selectedIndex)["name"];
+				dispatchEvent(new Event(TAKE_SELECTED));
+			}
+			
+			private function openTakeClick():void{
+				dispatchEvent(new Event(OPEN_TAKE));
+			}
+			
+			private function createElementInputChange(event:Event):void {
+				refreshInput(TextInput(event.target));
+			}
+			
+			private function refreshInput(inputComposant:TextInput):void{
+				var folderIndex:int;
+				switch (inputComposant){
+					case projectCreationInput:
+						folderIndex = doesFileNameExistInfolder (workspace, projectCreationInput.text);
+						if( folderIndex !=-1){
+							createProjectButton.enabled=false;
+							shotCreationInput.visible=true;
+							
+							shotCreationInput.text ="";
+							shotCreationButton.visible=true;
+							takeCreationInput.visible=false;
+							takeCreationButton.visible=false;
+							takeCreationInput.text ="";
+							
+							forcingDatagridSelect=true;
+							projectListView.selectedIndex=folderIndex;
+							return;
+						}
+						shotCreationInput.visible=false;
+						shotCreationButton.visible=false;
+						takeCreationInput.visible=false;
+						takeCreationButton.visible=false;
+						if (projectCreationInput.text==""){
+							createProjectButton.enabled=false;
+						}else{
+							
+							createProjectButton.enabled=true;
+						}
+						break;
+					case shotCreationInput:
+						var url:String = File(projectListData.getItemAt(projectListView.selectedIndex)["file"]).nativePath+"/shots";
+						folderIndex = doesFileNameExistInfolder (url, shotCreationInput.text);
+						if(folderIndex!=-1){
+							shotCreationInput.visible=true;
+							shotCreationButton.visible=true;
+							takeCreationInput.visible=true;
+							takeCreationButton.visible=true;
+							forcingDatagridSelect=true;
+							shotListView.selectedIndex=folderIndex;
+							return;
+						}
+						if (shotCreationInput.text=="") {
+							shotCreationButton.enabled=false;
+						} else {
+							shotCreationButton.enabled=true;
+						}
+						takeCreationInput.visible=false;
+						takeCreationButton.visible=false;
+						
+						break;
+					case takeCreationInput:
+						url = File(shotListData.getItemAt(shotListView.selectedIndex)["file"]).nativePath+"/takes";
+						folderIndex= doesFileNameExistInfolder (url, takeCreationInput.text);
+						if (folderIndex!=-1){
+							takeCreationButton.enabled=false;
+							return;
+						}
+						
+						if (takeCreationInput.text==""){
+							takeCreationButton.enabled=false;
+						}else{
+							takeCreationButton.enabled=true;
+						}
+						takeCreationInput.visible=true;
+						takeCreationButton.visible=true;
+						break;
+				}
+			}
+			
+			private function doesFileNameExistInfolder(folderUrl:String, filename:String):int {
+				var folder:File=new File(folderUrl);
+				if(folderUrl && folder.exists && folder.isDirectory){
+					var fileArray:Array = folder.getDirectoryListing();
+					var i:int=0;
+					for each (var file:File in fileArray) {
+						if(file.name!=".DS_Store"){
+							if (file.name == filename) {
+								return i;
+							}
+							i++;
+						}
+					}
+				}
+				return -1;
+			}
+			
+			private function createProject():void {
+				createProjectButton.enabled=false;
+				// dipsatch event to create 
+				dispatchEvent(new Event(CREATE_PROJECT));
+			}
+			
+			public function projectCreatedSuccessfully(projectFolderPath:String):void {
+				projectList(new File(workspace));
+				projectListView.selectedIndex=getCollectionIndex(projectListData, new File(projectFolderPath));
+				refreshInput(projectCreationInput);
+				focusManager.setFocus(shotCreationInput);
+			}
+			
+			private function createShot():void {
+				shotCreationButton.enabled=false;
+				dispatchEvent(new Event(CREATE_SHOT));
+			}
+			
+			public function shotCreatedSuccessfully(shotsFolderPath:String):void {
+				shotList (new File (shotsFolderPath));
+				var file:File = new File (shotsFolderPath+shotCreationInput.text);
+				shotListView.selectedIndex=getCollectionIndex(shotListData, file);
+				refreshInput(shotCreationInput);
+				focusManager.setFocus(takeCreationInput);					
+			}
+			
+			private function createTake():void{	
+				takeCreationButton.enabled=false;
+				dispatchEvent(new Event(CREATE_TAKE));
+			}
+			
+			public function takeCreatedSuccessfully(takesFolderPath:String):void{
+				var take:File = new File(takesFolderPath);
+				takeList(take);
+				var file:File = new File(takesFolderPath+"/"+takeCreationInput.text);
+				takeListView.selectedIndex=getCollectionIndex(takeListData, file);
+			}
+			
+			private function getCollectionIndex(collection:ArrayCollection, file:File ):int{
+				for (var count:int = 0; count < collection.length; count++){
+					if(collection.getItemAt(count)["name"]==file.name){
+						return count;
+					}
+				}
+				return -1;
+			}
+			
+			protected function titleWin_windowMovingHandler(evt:TitleWindowBoundsEvent):void {				
+				evt.stopImmediatePropagation();
+				evt.preventDefault();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup id="vgroup" left="10" top="10" >
+		<s:Panel width="600" title="{resourceManager.getString('GUI_I18NS'
+				 ,'create')}" backgroundColor="#8C8C8C" >
+			<s:HGroup contentBackgroundColor="#8C8C8C">
+				<s:Group>
+					<s:TextInput id="projectCreationInput" borderColor="#FFFFFF" contentBackgroundColor="#FFFFFF" maxChars="20" width="140" change="createElementInputChange(event)"/>
+				</s:Group>
+				<s:Group>
+					<s:Button id="createProjectButton" label="{resourceManager.getString('GUI_I18NS'
+							  ,'create_project')}" enabled="false" click="createProject()"/>
+					<s:TextInput id="shotCreationInput" borderColor="#FFFFFF" contentBackgroundColor="#FFFFFF" maxChars="20" width="140" visible="false" change="createElementInputChange(event)"/>
+				</s:Group>
+				<s:Group>
+					<s:Button id="shotCreationButton" label="{resourceManager.getString('GUI_I18NS'
+							  ,'create_shot')}" enabled="false" visible="false" click="createShot()"/>
+					<s:TextInput id="takeCreationInput" borderColor="#FFFFFF" contentBackgroundColor="#FFFFFF" maxChars="20" width="140" visible="false" change="createElementInputChange(event)"/>
+				</s:Group>
+				<s:Group>
+					<s:Button id="takeCreationButton" label="{resourceManager.getString('GUI_I18NS'
+							  ,'create_take')}" enabled="false" visible="false" click="createTake()" focusEnabled="false"/>
+				</s:Group>
+			</s:HGroup>
+		</s:Panel>
+		<s:HGroup id="logo_holder" width="600" height="30" horizontalAlign="center"  >
+			<s:Image width="428" height="295" source="@Embed(source='assets/logoApp/hyde_logo.png')"/>
+		</s:HGroup>		
+		<s:Panel id="listPanel" width="600" title="{resourceManager.getString('GUI_I18NS', 'recent')}" backgroundColor="#8C8C8C">
+			<s:VGroup>
+				<s:HGroup>
+					<s:DataGrid id="projectListView" editable="true" width="140" height="250" valueCommit="projectSelected()" dataProvider="{projectListData}" left="0" right="0" top="0" bottom="0">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:DefaultGridItemRenderer>
+									<fx:Script>
+										<![CDATA[
+											override public function prepare(hasBeenRecycled:Boolean):void {
+												if (data) 
+													label = data["name"];
+											}
+										]]>
+									</fx:Script>
+								</s:DefaultGridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="name" headerText="{resourceManager.getString('GUI_I18NS', 'projects')}"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<s:DataGrid id="shotListView" editable="true" visible="false" width="140" height="250" valueCommit="shotSelected()" dataProvider="{shotListData}" left="0" right="0" top="0" bottom="0">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:DefaultGridItemRenderer>
+									<fx:Script>
+										<![CDATA[
+											override public function prepare(hasBeenRecycled:Boolean):void{
+												if(data)
+													label = data["name"];
+											}
+										]]>
+									</fx:Script>
+								</s:DefaultGridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="name" headerText="{resourceManager.getString('GUI_I18NS', 'shot')}"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<s:DataGrid id="takeListView" editable="true" visible="false" width="140" height="250" valueCommit="takeSelected()" dataProvider="{takeListData}" left="0" right="0" top="0" bottom="0">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:DefaultGridItemRenderer>
+									<fx:Script>
+										<![CDATA[
+											override public function prepare(hasBeenRecycled:Boolean):void{
+												if(data)
+													label =  data["name"];
+											}
+										]]>
+									</fx:Script>
+								</s:DefaultGridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="name" headerText="{resourceManager.getString('GUI_I18NS', 'takes')}"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<s:VGroup id="preview" horizontalAlign="center" visible="false" width="150">
+						<s:Spacer height="30"/>
+						<s:Image source="@Embed(source='lamenagerie.png')" width="100" height="100" click="openTakeClick()"/>
+						<s:Button id="openTakeButton" label="{resourceManager.getString('GUI_I18NS'
+								  ,'open_take')}" top="25" click="openTakeClick()" focusEnabled="false"/>
+					</s:VGroup>
+				</s:HGroup>
+			</s:VGroup>
+		</s:Panel>
+	</s:VGroup>
+</s:TitleWindow>
