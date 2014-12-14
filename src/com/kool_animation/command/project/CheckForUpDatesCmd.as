@@ -1,5 +1,4 @@
-package com.kool_animation.command.project
-{
+package com.kool_animation.command.project {
 	import air.update.ApplicationUpdaterUI;
 	import air.update.events.UpdateEvent;
 	import org.puremvc.as3.interfaces.INotification;
@@ -12,7 +11,7 @@ package com.kool_animation.command.project
 				var visibleState:Boolean=notification.getBody() as Boolean;
 				
 				appUpdater.addEventListener(UpdateEvent.INITIALIZED, updateCheckNow);
-				appUpdater.updateURL = "http://bertille.lamenagerie.com/wp-content/uploads/air/update.xml";
+				appUpdater.updateURL = "http://hyde.kool-animation.com/air/update.xml";
 				appUpdater.delay = 0.1;
 				appUpdater.isCheckForUpdateVisible = visibleState;
 				appUpdater.initialize();
