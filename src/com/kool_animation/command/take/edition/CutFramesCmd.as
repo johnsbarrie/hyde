@@ -1,6 +1,7 @@
 package com.kool_animation.command.take.edition
 {
 	import com.kool_animation.constant.ProjectConstant;
+	import com.kool_animation.mediator.NativeMenuMediator;
 	import com.kool_animation.mediator.TakeTimelineMediator;
 	import com.kool_animation.model.TakeTimeLineProxy;
 	
@@ -16,7 +17,7 @@ package com.kool_animation.command.take.edition
 			sendNotification(ProjectConstant.ADD_HISTORY);
 			var timeLineMediator:TakeTimelineMediator = facade.retrieveMediator(TakeTimelineMediator.NAME) as TakeTimelineMediator;
 			var timeLineProxy:TakeTimeLineProxy= facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;
-			
+			var nativeMenuMediator:NativeMenuMediator= facade.retrieveMediator(NativeMenuMediator.NAME) as NativeMenuMediator;
 			//var currentIndex:int = timeLineProxy.currentIndex;
 			
 			if(timeLineMediator.selectedItems.length > 0){
@@ -35,9 +36,11 @@ package com.kool_animation.command.take.edition
 
 				Clipboard.generalClipboard.setData("framesList", list, false);
 				timeLineProxy.removeFrames(timeLineMediator.selectedIndices.concat());
-			}
-			else 
+				nativeMenuMediator.setPasteState(true);
+			}	else {
 				Clipboard.generalClipboard.clear();
+				nativeMenuMediator.setPasteState(false);
+			}
 			
 			// Mise a jour de la frame courante
 			timeLineProxy.setCurrentFrame(firstIndex,true);

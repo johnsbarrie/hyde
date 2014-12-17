@@ -20,6 +20,9 @@
 			private function addedToStage (evt:Event):void {
 				this.stage.nativeWindow.addEventListener(NativeWindowBoundsEvent.RESIZE, windowResized);
 				gridContainer.addEventListener(Event.RESIZE, updateGUI);	
+				fullscreentimer=new Timer(50,1);
+				fullscreentimer.addEventListener(TimerEvent.TIMER, fullscreenTimed);
+				
 				updateGUI(null);
 				this.gridToggled(false);
 			}

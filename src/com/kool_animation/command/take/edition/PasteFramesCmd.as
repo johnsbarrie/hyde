@@ -35,10 +35,7 @@ package com.kool_animation.command.take.edition
 					var timeLineMediator:TakeTimelineMediator = facade.retrieveMediator(TakeTimelineMediator.NAME) as TakeTimelineMediator;
 					timeLineMediator.selectedIndices = selectList;
 				}
-
-
 			}
 		}
-		
 	}
 }

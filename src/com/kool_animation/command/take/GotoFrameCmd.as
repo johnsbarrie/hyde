@@ -12,16 +12,7 @@ package com.kool_animation.command.take {
 			var targetIndex:uint = notification.getBody() as uint;
 			timeLineProxy.setCurrentFrame(targetIndex);
 			var monitorMediator:MonitorMediator = facade.retrieveMediator(MonitorMediator.NAME) as MonitorMediator;
-			
-			
-			/*
-			var vftMediator:VideoFluxToolbarMediator = facade.retrieveMediator(VideoFluxToolbarMediator.NAME) as VideoFluxToolbarMediator;
-			
-			if ((vftMediator.liveVideoActivated)&&(monitorMediator.isLiveVisible))
-				sendNotification(CaptureContant.HIDE_LIVE_VIDEO);
-
- 			
-			*/
+			timeLineProxy.currentIndexBeforePlay = targetIndex;
 		}
 	}
 }

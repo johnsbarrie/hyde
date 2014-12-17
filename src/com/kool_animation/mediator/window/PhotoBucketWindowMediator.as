@@ -58,10 +58,11 @@ package com.kool_animation.mediator.window
 			if(!windowInitialised) {
 				this.window.closeButton.addEventListener (MouseEvent.CLICK, closeWindow);
 				windowInitialised=true;
-				var photoframes:ArrayCollection= diskPathsProxy.createPhotoBucketFrames();
 				
-				window.dataViewsList = photoframes;
 			}
+			var photoframes:ArrayCollection= diskPathsProxy.createPhotoBucketFrames();
+			
+			window.dataViewsList = photoframes;
 		}
 		
 		private function windowResizing (evt:NativeWindowBoundsEvent):void {

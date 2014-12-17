@@ -18,7 +18,7 @@ package com.kool_animation.model {
 		protected var _loop:Boolean;								// Flag lecture en boucle
 		protected var _timer:JJTimer;								// Horloge de la timeLine
 		protected var currentFrameOffset:int=0;
-		protected var currentIndexBeforePlay:int=0;
+		public var currentIndexBeforePlay:int=0;
 
 		/* Constructeur */
 		public function AbstractTimeLineProxy(proxyName:String=NAME, data:Object=null) {
@@ -50,10 +50,11 @@ package com.kool_animation.model {
 		public function play():void {
 			if (_frames) {
 				// currentFrameOffset = _currentIndex;
-				if (currentIndex == _frames.length-1) {
-					currentIndex=0;
-				}
-				currentIndexBeforePlay = currentIndex;
+				//if (currentIndexBeforePlay == _frames.length-1) {
+					//currentIndex=-1;
+				//}else{
+					currentIndex=currentIndexBeforePlay-1;
+				//}
 				//trace("play : " + currentIndexBeforePlay);
 				_timer.reset();
 				_timer.start();
@@ -65,9 +66,9 @@ package com.kool_animation.model {
 		public function stop():void {
 			_timer.stop();
 			//trace("stop : " + currentIndexBeforePlay);
-			setCurrentFrame(currentIndexBeforePlay);
+			setCurrentFrame(currentIndex);
 			
-			sendNotification(TakeConstant.CURRENT_FRAME_CHANGED, currentIndexBeforePlay);
+			sendNotification(TakeConstant.CURRENT_FRAME_CHANGED, currentIndex);
 		}
 		
 		/* Inverse l'etat de lecture play/pause */

@@ -29,6 +29,7 @@ package com.kool_animation.model {
 					sendNotification (TakeConstant.HIDE_LIVE_VIDEO);
 					setCurrentFrame (currentIndex);
 				} else {
+					setCurrentFrame (currentIndex);
 					sendNotification (TakeConstant.TRANSPORT_STOP);
 				}
 				_timer.reset();
@@ -36,7 +37,6 @@ package com.kool_animation.model {
 		}
 		
 		override public function play():void{
-			
 			skippedCurrentFrameForLive=false;
 			super.play();
 			soundProxy.play();
@@ -93,9 +93,7 @@ package com.kool_animation.model {
 				xml.layer.appendChild(node);
 			}
 			
-			if ( lostAllFrames ){
-				//throw new Error("lost all frames");	
-			}
+			if ( lostAllFrames ){ /**throw new Error("lost all frames");	*/}
 			
 			var diskPathsProxy:DiskPathsProxy= facade.retrieveProxy(DiskPathsProxy.NAME) as DiskPathsProxy;
 			var file:File=new File(diskPathsProxy.timeFilePath)

@@ -23,9 +23,9 @@
 			
 			public function export():void{
 				if (this.filmSelection.selectedIndex==0) {
-					dispatchEvent (new Event(EXPORT_FILM));	
+					dispatchEvent (new Event(EXPORT_IMAGES));
 				} else {
-					 dispatchEvent (new Event(EXPORT_IMAGES));
+					dispatchEvent (new Event(EXPORT_FILM));	
 				}
 			}
 		]]>
@@ -37,8 +37,8 @@
 				<s:ComboBox id="filmSelection" selectedIndex="0">
 					<s:dataProvider>
 						<mx:ArrayList>
-							<fx:String>Movie</fx:String>
 							<fx:String>Image Sequence</fx:String>
+							<fx:String>Movie</fx:String>
 						</mx:ArrayList>
 					</s:dataProvider>
 				</s:ComboBox>

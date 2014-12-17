@@ -39,5 +39,5 @@
 		<ns1:ExportationChoiceWindow id="exportationChoiceWindow"  title="{resourceManager.getString('GUI_I18NS', 'export')}" />
 	</fx:Declarations>
 	<ns:TakeView id="takeView" contentBackgroundColor="#3C3C3C" top="10" width="100%" height="90%"/>
-	<s:Label id="debugLabel"  height="100" width="600" color="#FFFFFF" fontSize="12"  mouseEnabled="false" visible="true"/>
+	<s:Label id="debugLabel"  height="100" width="600" color="#FFFFFF" fontSize="12"  mouseEnabled="false" visible="false"/>
 </s:WindowedApplication>
