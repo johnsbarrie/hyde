@@ -38,8 +38,6 @@ package com.kool_animation.command.setup {
 			addSubCommand(SetupTimelapseWindowMediator);
 			
 			addSubCommand(SetupPhotoBucketWindowMediator);
-			
-			
 		}
 	}
 }

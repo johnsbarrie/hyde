@@ -1,6 +1,7 @@
 package com.kool_animation.model {
 	import com.kool_animation.constant.TakeConstant;
 	import com.kool_animation.event.JJTimerEvent;
+	
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -45,6 +46,15 @@ package com.kool_animation.model {
 		override public function stop():void{
 			soundProxy.stop();
 			super.stop();
+		}
+		
+		public function flushMemory():void{
+			for(var i:int=0; i<_frames.length; i++){
+				var frameVO:FrameVO=_frames.getItemAt(i) as FrameVO;
+				if(i!=currentIndex){
+					frameVO.flushMemory();
+				}
+			}
 		}
 		
 		/* Recupère la frame a l'index souhaité */
