@@ -49,10 +49,12 @@ package com.kool_animation.model {
 		}
 		
 		public function flushMemory():void{
-			for(var i:int=0; i<_frames.length; i++){
-				var frameVO:FrameVO=_frames.getItemAt(i) as FrameVO;
-				if(i!=currentIndex){
-					frameVO.flushMemory();
+			if(_frames.length>200){
+				for(var i:int=0; i<(_frames.length-200); i++){
+					var frameVO:FrameVO=_frames.getItemAt(i) as FrameVO;
+					if (i!=currentIndex) {
+						frameVO.flushMemory();
+					}
 				}
 			}
 		}

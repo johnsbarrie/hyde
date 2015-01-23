@@ -86,7 +86,10 @@ package com.kool_animation.model
 			_fileFrameService.saveThumb(_thumb.source as ByteArray);
 			_fileFrameService.savePhoto(_view.source as ByteArray);
 			_fileFrameService.savePreview(_preView.source as ByteArray);
-			if(_jpgView.source ){
+		}
+		
+		public function saveJpg():void{
+			if (_jpgView.source){
 				_fileFrameService.saveJpg(_jpgView.source as ByteArray);
 			}
 		}
@@ -136,8 +139,13 @@ package com.kool_animation.model
 		
 		public function flushMemory():void{
 			_view.source=null;
-			_preView.source	=null;
+			_preView.source	=null;		
+		}
+		
+		public function flushJpgMemory():void{
 			_jpgView.source=null;		
 		}
+		
+		
 	}
 }

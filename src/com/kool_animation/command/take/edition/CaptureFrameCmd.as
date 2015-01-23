@@ -108,7 +108,8 @@ package com.kool_animation.command.take.edition {
 		
 		private function onJPGCreationComplete(evt:Event):void{
 			frame.makeJpgImage(imageSetCreator.jpgSrc);
-			frame.save();
+			frame.saveJpg();
+			frame.flushJpgMemory();
 			timeLineProxy.flushMemory();
 			//trace(System.totalMemory / 1024);
 		}
