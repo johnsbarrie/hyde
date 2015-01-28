@@ -514,7 +514,7 @@
 					</s:DataGrid>
 					<s:VGroup id="preview" horizontalAlign="center" visible="false" width="150">
 						<s:Spacer height="30"/>
-						<s:Image source="@Embed(source='lamenagerie.png')" width="100" height="100" click="openTakeClick()"/>
+						<s:Image source="@Embed(source='assets/plandefaultthumb.png')" width="100" height="100" click="openTakeClick()"/>
 						<s:Button id="openTakeButton" label="{resourceManager.getString('GUI_I18NS'
 								  ,'open_take')}" top="25" click="openTakeClick()" focusEnabled="false"/>
 					</s:VGroup>

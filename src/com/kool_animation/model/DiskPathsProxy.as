@@ -7,16 +7,13 @@ package com.kool_animation.model {
 	import org.puremvc.as3.patterns.proxy.Proxy;
 
 	public class DiskPathsProxy extends Proxy implements IProxy {
-		
 		public static const NAME:String="DiskPathsProxy";
 		private var _projectName:String;
 		private var _shotName:String=null;
 		private var _takeName:String=null;
-		
 		public const PREFERENCE_LIST_PATH:String = "settings/preference.xml";
 		public const SHOT_FOLDERNAME:String = "shots";
 		public const TAKE_FOLDERNAME:String = "takes";
-		
 		private const PROJECT_FILE_NAME:String	= "project.apr";
 		private const SHOT_FILE_NAME:String	= "shot.xml";
 		private const TIMELINE_FILE_NAME:String	= "timeline.xml";
@@ -24,6 +21,7 @@ package com.kool_animation.model {
 		private const PREVIEW_IMAGE_FOLDERNAME:String = "prev";
 		private const THUMB_IMAGE_FOLDERNAME:String = "thumb";
 		private const SRC_IMAGE_FOLDERNAME:String = "src";
+		private const JPG_IMAGE_FOLDERNAME:String = "jpg";
 		private const SOUND_FOLDERNAME:String = "sound";
 		
 		public function DiskPathsProxy(proxyName:String=NAME, data:Object=null) {
@@ -107,18 +105,18 @@ package com.kool_animation.model {
 		}
 		
 		public function get takeSourceFolderPath ():String{
-			return takeFolderPath+"src/";
+			return takeFolderPath+"/"+SRC_IMAGE_FOLDERNAME+"/";
 		}
 		
 		public function get takeJPGFolderPath ():String{
-			return takeFolderPath+"/jpg/";
+			return takeFolderPath+"/"+JPG_IMAGE_FOLDERNAME+"/";
 		}
 		
 		public function get takeThumbFolderPath ():String{
-			return takeFolderPath+"/thumb/";
+			return takeFolderPath+"/"+THUMB_IMAGE_FOLDERNAME+"/";
 		}
 		public function get takePrevFolderPath ():String{
-			return takeFolderPath+"/prev/";
+			return takeFolderPath+"/"+PREVIEW_IMAGE_FOLDERNAME+"/";
 		}
 		
 		public function  getImagename (id:String):String { 

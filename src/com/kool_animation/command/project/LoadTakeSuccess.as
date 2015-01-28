@@ -21,7 +21,7 @@ package com.kool_animation.command.project {
 			if(!monitorMediator.cameraStarted){
 				monitorMediator.connectCameraStream("0");
 			}
-			sendNotification(TakeConstant.GOTO_LAST_FRAME);
+			sendNotification(TakeConstant.GOTO_FIRST_FRAME);
 			sendNotification(TakeConstant.SHOW_LIVE_VIDEO);
 		}
 	}
