@@ -9,7 +9,7 @@ package com.kool_animation.command.take.edition
 	{
 		override public function execute(notification:INotification):void{
 			sendNotification(TakeConstant.COPY_FRAMES);
-			sendNotification(TakeConstant.PASTE_FRAMES);
+			sendNotification(TakeConstant.PASTE_FRAMES_AFTER);
 		}
 	}
 }

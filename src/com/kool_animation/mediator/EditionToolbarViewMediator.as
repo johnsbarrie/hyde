@@ -18,7 +18,8 @@ package com.kool_animation.mediator
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_CUT, cut_frame);
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_DELETE, delete_frame);
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_OPEN_PHOTO_BUCKET, open_photo_bucket_frame);
-			editionToolbarView.addEventListener(EditionToolBarView.EVENT_PASTE, paste_frame);
+			editionToolbarView.addEventListener(EditionToolBarView.EVENT_PASTE_BEFORE, paste_frame_before);
+			editionToolbarView.addEventListener(EditionToolBarView.EVENT_PASTE_AFTER, paste_frame_after);
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_REVERSE, reverse_frame);
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_REVERSEPASTE, reverse_paste_frame);
 			editionToolbarView.addEventListener(EditionToolBarView.EVENT_EXPORT, export);
@@ -40,8 +41,12 @@ package com.kool_animation.mediator
 			sendNotification( ProjectConstant.OPEN_PHOTO_BUCKET_WINDOW);
 		}
 		
-		private function paste_frame(evt:Event):void{
-			sendNotification(TakeConstant.PASTE_FRAMES);
+		private function paste_frame_before(evt:Event):void{
+			sendNotification(TakeConstant.PASTE_FRAMES_BEFORE);
+		}
+		
+		private function paste_frame_after(evt:Event):void{
+			sendNotification(TakeConstant.PASTE_FRAMES_AFTER);
 		}
 		
 		private function reverse_frame(evt:Event):void{

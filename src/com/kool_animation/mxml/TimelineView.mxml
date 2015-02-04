@@ -15,8 +15,9 @@
 			import spark.events.IndexChangeEvent;
 			
 			public static const EVENT_COPY:String					= "event_copy";
-			public static const EVENT_PASTE:String				    = "event_reverse_paste";
-			public static const EVENT_REVERSE_PASTE:String			= "event_paste";
+			public static const EVENT_PASTE_BEFORE:String			= "event_paste_before";
+			public static const EVENT_PASTE_AFTER:String			= "event_paste_after";
+			public static const EVENT_REVERSE_PASTE:String			= "event_reverse_paste";
 			
 			public static const EVENT_CUT:String					= "event_cut";
 			public static const EVENT_DELETE:String				    = "event_delete";
@@ -44,9 +45,13 @@
 				cutItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doCutCmd);
 				viewContextMenu.customItems.push(cutItem);
 				
-				var pasteItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'paste'));
-				pasteItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteCmd);
-				viewContextMenu.customItems.push(pasteItem);
+				var pasteBeforeItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'paste_before'));
+				pasteBeforeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteBeforeCmd);
+				viewContextMenu.customItems.push(pasteBeforeItem);
+				
+				var pasteAfterItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'paste_after'));
+				pasteAfterItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteAfterCmd);
+				viewContextMenu.customItems.push(pasteAfterItem);
 				
 				var pasteInverserItem:ContextMenuItem = new ContextMenuItem(resourceManager.getString('GUI_I18NS', 'inverse_paste'));
 				pasteInverserItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, doPasteInverserCmd);
@@ -104,7 +109,9 @@
 			}
 			
 			private function doCopyCmd(e:ContextMenuEvent):void { dispatchEvent (new Event(EVENT_COPY)); }
-			private function doPasteCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_PASTE)); }
+			private function doPasteBeforeCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_PASTE_BEFORE)); }
+			private function doPasteAfterCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_PASTE_AFTER)); }
+			
 			private function doPasteInverserCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_REVERSE_PASTE)); }
 			private function doCutCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_CUT)); }
 			private function doDeleteCmd(e:ContextMenuEvent):void { dispatchEvent(new Event(EVENT_DELETE)); }

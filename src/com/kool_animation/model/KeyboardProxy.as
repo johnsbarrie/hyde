@@ -3,6 +3,7 @@ package com.kool_animation.model {
 	import com.kool_animation.model.vo.KeyboardVO;
 	
 	import flash.display.Stage;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
@@ -27,7 +28,7 @@ package com.kool_animation.model {
 		
 		/* Constructeur */
 		public function KeyboardProxy() {
-			var stage:Stage=AppFacade.STAGE;
+			//var stage:Stage=AppFacade.STAGE;
 			AppFacade.STAGE.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			AppFacade.STAGE.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
@@ -36,6 +37,10 @@ package com.kool_animation.model {
 		}
 		
 		public function onKeyDown(ke:KeyboardEvent):void {
+			if (AppFacade.STAGE.displayState!=StageDisplayState.NORMAL) {
+				AppFacade.STAGE.displayState = StageDisplayState.NORMAL;
+				AppFacade.STAGE.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			}
 			var notification:String = getNotificationForKeyboardEvent(ke, KeyboardProxy.TAKE_KEYMAP_TYPE);
 			
 			if (notification)

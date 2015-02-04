@@ -24,7 +24,8 @@ package com.kool_animation.mediator
 			timelineView.addEventListener(TimelineView.EVENT_CUT, onCut);
 			timelineView.addEventListener(TimelineView.EVENT_DELETE, onDelete);
 			//timelineView.addEventListener(TimelineView.EVENT_IMPORT, onImport);
-			timelineView.addEventListener(TimelineView.EVENT_PASTE, onPaste);
+			timelineView.addEventListener(TimelineView.EVENT_PASTE_BEFORE, onPasteBefore);
+			timelineView.addEventListener(TimelineView.EVENT_PASTE_AFTER, onPasteAfter);
 			timelineView.addEventListener(TimelineView.EVENT_REVERSE_PASTE, onReversePaste);
 			timelineView.addEventListener(TimelineView.EVENT_REVERSE, onReverse);
 			timelineView.addEventListener(TimelineView.EVENT_DUPLICATE, onDuplicate);
@@ -97,7 +98,8 @@ package com.kool_animation.mediator
 		
 		/* Gestion des evenements UI */
 		private function onCopy(e:Event):void { sendNotification(TakeConstant.COPY_FRAMES); }
-		private function onPaste(e:Event):void { sendNotification(TakeConstant.PASTE_FRAMES); }
+		private function onPasteBefore(e:Event):void { sendNotification(TakeConstant.PASTE_FRAMES_BEFORE); }
+		private function onPasteAfter(e:Event):void { sendNotification(TakeConstant.PASTE_FRAMES_AFTER); }
 		private function onCut(e:Event):void { sendNotification(TakeConstant.CUT_FRAMES); }
 		private function onDelete(e:Event):void { sendNotification(TakeConstant.DELETE_FRAMES); }
 		private function onReverse(e:Event):void { sendNotification(TakeConstant.REVERSE_FRAMES); }

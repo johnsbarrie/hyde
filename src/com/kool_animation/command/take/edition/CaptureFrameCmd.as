@@ -58,6 +58,10 @@ package com.kool_animation.command.take.edition {
 			// test to make sure videoobject has a valide flux
 			var videoObject:Video=monitorMediator.camera.videoObject;
 			if ( !videoObject || (!(videoObject.videoHeight>0 &&videoObject.videoWidth>0))) {
+				if(!videoObject ){
+					sendNotification(AppFacade.DEBUG, "no camera");
+					return;
+				}
 				sendNotification(AppFacade.DEBUG, "videoObject.videoHeight ="+videoObject.videoHeight);
 				return;
 			}

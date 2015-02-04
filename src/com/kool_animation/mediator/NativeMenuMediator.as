@@ -196,7 +196,7 @@ package com.kool_animation.mediator
 				inversPasteCommand.keyEquivalentModifiers = [Keyboard.CONTROL, Keyboard.SHIFT];
 			}
 			inversPasteCommand.enabled=false;
-			pasteCommand = createNativeMenuItem(fileMenu, "paste", "v", pasteCommandMenu);
+			pasteCommand = createNativeMenuItem(fileMenu, "paste_after", "v", pasteCommandMenu);
 			pasteCommand.enabled=false;
 			var cutCommand:NativeMenuItem = createNativeMenuItem(fileMenu, "cut", "x", cutCommandMenu);
 			var duplicateCommand:NativeMenuItem = createNativeMenuItem(fileMenu, "duplicate", "d", duplicateCommandMenu);
@@ -238,7 +238,7 @@ package com.kool_animation.mediator
 		}
 
 		private function pasteCommandMenu(evt:Event):void {
-			sendNotification(TakeConstant.PASTE_FRAMES);
+			sendNotification(TakeConstant.PASTE_FRAMES_AFTER);
 		}
 		
 		private function cutCommandMenu (evt:Event):void {

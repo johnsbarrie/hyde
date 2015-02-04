@@ -11,7 +11,7 @@ package com.kool_animation.command.take.edition
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
 	
-	public class PasteFramesCmd extends SimpleCommand
+	public class PasteFramesBeforeCmd extends SimpleCommand
 	{
 		
 		override public function execute(notification:INotification):void {
@@ -26,7 +26,7 @@ package com.kool_animation.command.take.edition
 				var frameIndice:int = timeLineProxy.currentIndex;
 
 				for each (var frame:Object in framesList){
-					frameIndice = timeLineProxy.addFrameAt(frame as FrameVO, frameIndice+1);
+					frameIndice = timeLineProxy.addFrameAt(frame as FrameVO, frameIndice);
 					selectList.push(frameIndice);
 				}				
 				

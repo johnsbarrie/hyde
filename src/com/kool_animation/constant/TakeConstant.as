@@ -4,7 +4,8 @@ package com.kool_animation.constant
 	{
 
 		public static const COPY_FRAMES:String						= "TakeConstant.COPY_FRAMES";
-		public static const PASTE_FRAMES:String						= "TakeConstant.PASTE_FRAMES";
+		public static const PASTE_FRAMES_BEFORE:String				= "TakeConstant.PASTE_FRAMES_BEFORE";
+		public static const PASTE_FRAMES_AFTER:String				= "TakeConstant.PASTE_FRAMES_AFTER";
 		public static const CUT_FRAMES:String						= "TakeConstant.CUT_FRAMES";
 		public static const DELETE_FRAMES:String					= "TakeConstant.DELETE_FRAMES";
 		public static const REVERSE_FRAMES:String					= "TakeConstant.REVERSE_FRAMES";

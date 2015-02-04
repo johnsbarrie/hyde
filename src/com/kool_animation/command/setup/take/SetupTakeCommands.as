@@ -32,7 +32,8 @@ package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.edition.ImportImageCmd;
 	import com.kool_animation.command.take.edition.InsertPhotoBucketFramesCmd;
 	import com.kool_animation.command.take.edition.InvertedPasteFramesCmd;
-	import com.kool_animation.command.take.edition.PasteFramesCmd;
+	import com.kool_animation.command.take.edition.PasteFramesBeforeCmd;
+	import com.kool_animation.command.take.edition.PasteFramesAfterCmd;
 	import com.kool_animation.command.take.edition.ReverseFramesCmd;
 	import com.kool_animation.constant.TakeConstant;
 	
@@ -54,7 +55,8 @@ package com.kool_animation.command.setup.take {
 			facade.registerCommand(TakeConstant.COPY_FRAMES, CopyFramesCmd);
 			facade.registerCommand(TakeConstant.CUT_FRAMES, CutFramesCmd);
 			facade.registerCommand(TakeConstant.DELETE_FRAMES, DeleteFramesCmd);
-			facade.registerCommand(TakeConstant.PASTE_FRAMES, PasteFramesCmd);
+			facade.registerCommand(TakeConstant.PASTE_FRAMES_BEFORE, PasteFramesBeforeCmd);
+			facade.registerCommand(TakeConstant.PASTE_FRAMES_AFTER, PasteFramesAfterCmd);
 			facade.registerCommand(TakeConstant.REVERSE_FRAMES, ReverseFramesCmd);
 			facade.registerCommand(TakeConstant.PASTE_INVERTED_FRAMES, InvertedPasteFramesCmd);
 			facade.registerCommand(TakeConstant.SELECT_ALL_FRAMES, SelectAllFramesCmd);
