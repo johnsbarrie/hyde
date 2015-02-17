@@ -30,13 +30,12 @@ package com.kool_animation.tools {
 			this.createPNG(displayObject, onSrcCreationProgress, onSrcCreationComplete, 1);
 			
 			/** PREVIEW scale */
-			var scale:Number = Math.min(400.0/displayObject.width, 0.5);
+			var scale:Number = Math.min(600.0/displayObject.width, 0.5);
 			this.createPNG(displayObject, onPrevCreationProgress, onPrevCreationComplete, scale);
 			
 			/** THUMB scale */
 			scale = 80.0/displayObject.width;
 			this.createPNG(displayObject, onThumbCreationProgress, onThumbCreationComplete, scale);
-			
 			this.createJPG(displayObject, jpgEncodeProgress, jpgComplete, 1);
 		}
 		
@@ -44,11 +43,12 @@ package com.kool_animation.tools {
 			// create bitmap at right size
 			var viewBitmapData:BitmapData = new BitmapData(displayObject.width*scale,displayObject.height*scale);
 			var matrix:Matrix = new Matrix();
-			if(this.projectProxy.flippedHorizontal) { matrix.scale(-1,1); }
-			(this.projectProxy.flippedVertical) ? matrix.scale(1*scale,-1*scale) :  matrix.scale(1*scale,1*scale);	
 			
-			if(this.projectProxy.flippedHorizontal) { matrix.translate(viewBitmapData.width,0);	}
-			if(this.projectProxy.flippedVertical) { matrix.translate(0,viewBitmapData.height);	}
+			if(this.projectProxy.flippedHorizontal) { matrix.scale (-1, 1); }
+			(this.projectProxy.flippedVertical) ? matrix.scale ( 1*scale, -1*scale) :  matrix.scale (1*scale, 1*scale);	
+			
+			if(this.projectProxy.flippedHorizontal) { matrix.translate (viewBitmapData.width, 0);	}
+			if(this.projectProxy.flippedVertical) { matrix.translate (0, viewBitmapData.height);	}
 			viewBitmapData.draw(displayObject, matrix);
 			
 			// Start asynchronous png creation
@@ -79,17 +79,17 @@ package com.kool_animation.tools {
 		// Encoding Progress
 		private function onSrcCreationProgress(event:ProgressEvent):void {
 			this.progressSrc=event.bytesLoaded/event.bytesTotal;
-			totalProgress ();
+			totalProgress();
 		}
 		
 		private function onPrevCreationProgress(event:ProgressEvent):void {
 			this.progressPrev=event.bytesLoaded/event.bytesTotal;
-			totalProgress ();
+			totalProgress();
 		}
 		
 		private function onThumbCreationProgress(event:ProgressEvent):void {
 			this.progressThumb=event.bytesLoaded/event.bytesTotal;
-			totalProgress ();
+			totalProgress();
 		}
 		
 		// Encodage finished
@@ -109,14 +109,13 @@ package com.kool_animation.tools {
 		}
 		// Encodage finished
 		private function creationComplete():void {
-			if(++creationCounter >= 3){
+			if (++creationCounter >= 3) {
 				dispatchEvent(new Event(Event.COMPLETE));	
 			}
 		}
 		
 		private function jpgEncodeProgress(event:ProgressEvent):void {
 			var percentage:String = ((event.bytesLoaded / event.bytesTotal)*100) + "%";
-			//trace( " jpg encoding " + percentage );
 		}
 		
 		private function jpgComplete(event:JPEGAsyncCompleteEvent):void {
@@ -128,7 +127,5 @@ package com.kool_animation.tools {
 			var progress:Number = Math.floor((this.progressSrc + this.progressPrev + this.progressThumb)/3*100);
 			dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress ,100));
 		}
-		
-	 
 	}
 }

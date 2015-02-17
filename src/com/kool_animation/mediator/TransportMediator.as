@@ -33,6 +33,8 @@ package com.kool_animation.mediator {
 			transportView.addEventListener(TransportView.EVENT_SWITCH_PLAY, onSwitchPlay);
 			transportView.addEventListener(TransportView.EVENT_FPS_CHANGED, onFPSChanged);
 			transportView.addEventListener(TransportView.TOOGLE_FULLSCREEN, onToggleFullscreen);
+			transportView.addEventListener(TransportView.TOOGLE_SHORTPLAY, onToggleShortPlay);
+			
 		}
 		
 		/** Liste des notifications écoutés */
@@ -103,9 +105,10 @@ package com.kool_animation.mediator {
 		private function onGotoNext (e:Event):void { sendNotification(TakeConstant.GOTO_NEXT_FRAME); }
 		private function onGotoPrev (e:Event):void { sendNotification(TakeConstant.GOTO_PREV_FRAME); }
 		private function onSwitchLoop (e:Event):void { sendNotification(TakeConstant.TRANSPORT_SWITCH_LOOP); }
-		private function onSwitchPlay(e:Event):void { sendNotification(TakeConstant.TRANSPORT_SWITCH_PLAY);}
-		private function onToggleFullscreen(e:Event):void { sendNotification(ProjectConstant.TOGGLE_FULLSCREEN);}
-		private function onToggleIncludeLiveView(e:Event):void { sendNotification(TakeConstant.TOGGLE_LIVE_VIEW_STATE);}
+		private function onSwitchPlay(e:Event):void { sendNotification(TakeConstant.TRANSPORT_SWITCH_PLAY); }
+		private function onToggleFullscreen(e:Event):void { sendNotification(ProjectConstant.TOGGLE_FULLSCREEN); }
+		private function onToggleShortPlay(e:Event):void { sendNotification (TakeConstant.TOGGLE_SHORTPLAY); }
+		private function onToggleIncludeLiveView(e:Event):void { sendNotification(TakeConstant.TOGGLE_LIVE_VIEW_STATE); }
 		
 		public function get transportView():TransportView { return viewComponent as TransportView; }
 		

@@ -5,15 +5,12 @@ package com.kool_animation.command.take
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
 	
-	public class SelectNextFrameCmd extends SimpleCommand
-	{
-		override public function execute(notification:INotification):void {		
+	public class SelectNextFrameCmd extends SimpleCommand {
+		override public function execute(notification:INotification):void {
 			var timeLineProxy:TakeTimeLineProxy = facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;
-			
 			// si on est pas au bout de la time line
 			if (timeLineProxy.currentIndex < timeLineProxy.numberFrames){
 				var timeLineMediator:TakeTimelineMediator = facade.retrieveMediator(TakeTimelineMediator.NAME) as TakeTimelineMediator;
-		 		
 				// Récupère la selection actuelle
 				var selectList:Vector.<int> = timeLineMediator.selectedIndices.concat();
 				
@@ -33,34 +30,31 @@ package com.kool_animation.command.take
 					compareIndex = selectList[i];
 				}
 				// Création d'une nouvelle selection
-				if(badSelection){
+				if (badSelection) {
 					selectList = new Vector.<int>();
 					selectList.push(timeLineProxy.currentIndex);
 					firstIndex = lastIndex = timeLineProxy.currentIndex;
 				}
 				
 				// Si on est en fin de selection on ajoute l'element suivant
+				//trace("currentIndex lastIndex", timeLineProxy.currentIndex, lastIndex);
 				if (timeLineProxy.currentIndex == lastIndex){
+					
 					selectList.push(lastIndex+1);
 				}
-					// Si on est en debut de selection on enleve l'element de la selection
+				// Si on est en debut de selection on enleve l'element de la selection
 				else if (timeLineProxy.currentIndex == firstIndex){
 					selectList.shift();
 				}
-				
 				// Mise a jour de la position courante
+				//timeLineMediator.selectedIndices = selectList;
 				timeLineProxy.setCurrentFrame(timeLineProxy.currentIndex+1);
-				
 				// Mise a jour de la selection
-				timeLineMediator.selectedIndices = selectList;
 			}
-			
 		}
 		
 		final private function sortingIndices(a:Number, b:Number):int {
 			    	return (a==b ? 0 : (a < b) ? -1 : 1);
 		}
-		
-		
 	}
 }

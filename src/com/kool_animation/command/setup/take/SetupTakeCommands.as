@@ -39,6 +39,7 @@ package com.kool_animation.command.setup.take {
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
+	import com.kool_animation.command.take.ToggleShortplayCmd;
 	
 	public class SetupTakeCommands extends SimpleCommand {
 		override public function execute(notification:INotification):void {
@@ -82,6 +83,7 @@ package com.kool_animation.command.setup.take {
 			facade.registerCommand(TakeConstant.IMPORT_SOUND, ImportSoundCmd);
 			
 			facade.registerCommand(TakeConstant.TOGGLE_LIVE_VIEW_STATE, ToggleliveViewState);
+			facade.registerCommand(TakeConstant.TOGGLE_SHORTPLAY, ToggleShortplayCmd);
 		}
 	}
 }

@@ -38,6 +38,7 @@ package com.kool_animation.constant {
 		public static const FULLSCREEN_ENTERED:String 								= "TakeConstant.FULLSCREEN_ENTERED";
 		
 		public static const TOGGLE_FULLSCREEN:String								= "TakeConstant.TOGGLE_FULLSCREEN";
+		
 		public static const CHECK_FOR_UPDATES:String								= "TakeConstant.CHECK_FOR_UPDATES";
 		public static const TOGGLE_AUTOMATIC_UPDATES:String								= "TakeConstant.TOGGLE_AUTOMATIC_UPDATES";
 		

@@ -2,7 +2,6 @@ package com.kool_animation.model {
 	import com.kool_animation.AppFacade;
 	import com.kool_animation.model.vo.KeyboardVO;
 	
-	import flash.display.Stage;
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -38,11 +37,11 @@ package com.kool_animation.model {
 		
 		public function onKeyDown(ke:KeyboardEvent):void {
 			if (AppFacade.STAGE.displayState!=StageDisplayState.NORMAL) {
-				AppFacade.STAGE.displayState = StageDisplayState.NORMAL;
+				//AppFacade.STAGE.displayState = StageDisplayState.NORMAL;
 				AppFacade.STAGE.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				ke.preventDefault();
 			}
 			var notification:String = getNotificationForKeyboardEvent(ke, KeyboardProxy.TAKE_KEYMAP_TYPE);
-			
 			if (notification)
 				dispatchEvent(new Event(notification));
 		}
@@ -60,16 +59,12 @@ package com.kool_animation.model {
 				
 			takeKeyMap.push(new KeyboardVO(Keyboard.LEFT, false, false, true, false, false, SELECT_PREV_FRAME));
 			takeKeyMap.push(new KeyboardVO(Keyboard.RIGHT, false, false, true, false, false, SELECT_NEXT_FRAME));
-				
 			takeKeyMap.push(new KeyboardVO(Keyboard.LEFT, false, true, false, false, false, GOTO_FIRST_FRAME));
 			takeKeyMap.push(new KeyboardVO(Keyboard.RIGHT, false, true, false, false, false, GOTO_LAST_FRAME));
-			
 			takeKeyMap.push(new KeyboardVO(8, false, false, false, false, true, DELETE_FRAME));
 		}
 
-		/*
-			Fonction de comparaison de deux KeyEvents
-		*/
+		/* Fonction de comparaison de deux KeyEvents */
 		public function compareKeyEvents(keyEvent1:KeyboardEvent, keyEvent2:KeyboardEvent):Boolean{
 			if((keyEvent1.altKey == keyEvent2.altKey)
 				&&	(keyEvent1.commandKey == keyEvent2.commandKey)

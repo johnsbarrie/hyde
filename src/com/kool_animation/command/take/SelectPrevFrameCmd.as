@@ -54,7 +54,7 @@ package com.kool_animation.command.take
 				timeLineProxy.setCurrentFrame(timeLineProxy.currentIndex-1);
 				
 				// Mise a jour de la selection
-				timeLineMediator.selectedIndices = selectList;			
+				//timeLineMediator.selectedIndices = selectList;			
 			}
 		}
 		

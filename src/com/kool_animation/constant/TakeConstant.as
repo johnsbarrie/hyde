@@ -62,9 +62,10 @@ package com.kool_animation.constant
 		public static const CAPTURE_DISACTIVATE:String 				= "TakeConstant.CAPTURE_DISACTIVATE";
 		
 		public static const INSERT_PHOTO_BUCKET_FRAMES:String 		= "TakeConstant.INSERT_PHOTO_BUCKET_FRAMES";
-		public static const SELECT_NEXT_FRAME:String 		= "TakeConstant.SELECT_NEXT_FRAME";
+		public static const SELECT_NEXT_FRAME:String 			= "TakeConstant.SELECT_NEXT_FRAME";
 		public static const SELECT_PREVIOUS_FRAME:String 		= "TakeConstant.SELECT_PREVIOUS_FRAME";
 		public static const TOGGLE_LIVE_VIEW_STATE:String 		= "TakeConstant.TOGGLE_LIVE_VIEW_STATE";
+		public static const TOGGLE_SHORTPLAY:String				= "TakeConstant.TOGGLE_SHORTPLAY";
 		
 		public static const TIMELINE_ZOOM_IN:String 		= "TakeConstant.TIMELINE_ZOOM_IN";
 		public static const TIMELINE_ZOOM_OUT:String 		= "TakeConstant.TIMELINE_ZOOM_OUT";

@@ -19,13 +19,14 @@ package com.kool_animation.model {
 		protected var _timer:JJTimer;								// Horloge de la timeLine
 		protected var currentFrameOffset:int=0;
 		public var currentIndexBeforePlay:int=0;
+		public var shortplay:Boolean=true;
 
 		/* Constructeur */
 		public function AbstractTimeLineProxy(proxyName:String=NAME, data:Object=null) {
 			super(proxyName, data);
 			_frames = null;
 			_fps = 12.5; //(facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy).defaultFPS;  // TODO : a faire proprement la on peut pas (chargement asynch de preferences)
-			_timer = new JJTimer(TIMEBASE/_fps);
+			_timer = new JJTimer (TIMEBASE/_fps);
 			_timer.addEventListener(JJTimerEvent.ELAPSED, onTimerTick);
 			_frames=new ArrayCollection();
 		}
@@ -38,7 +39,6 @@ package com.kool_animation.model {
 				if (this._loop)
 					setCurrentFrame(_timer.count - _frames.length);
 				else {
-					//trace("setCurrentFrame"+_currentIndex);
 					setCurrentFrame(0);
 					stopTransport();	
 				}
@@ -49,13 +49,13 @@ package com.kool_animation.model {
 		/* Mise en lecture */
 		public function play():void {
 			if (_frames) {
-				// currentFrameOffset = _currentIndex;
-				//if (currentIndexBeforePlay == _frames.length-1) {
-					//currentIndex=-1;
-				//}else{
-					currentIndex=currentIndexBeforePlay-1;
-				//}
-				//trace("play : " + currentIndexBeforePlay);
+				if ( shortplay ) {
+					currentIndex = _frames.length -15;
+					if(currentIndex <0){currentIndex=0;} 
+				} else {
+					currentIndex = 0;
+				}
+				
 				_timer.reset();
 				_timer.start();
 				sendNotification (TakeConstant.HIDE_LIVE_VIDEO);
@@ -93,16 +93,16 @@ package com.kool_animation.model {
 		public function setCurrentFrame(index:int, force:Boolean = false):void {
 			if(!_frames)
 				return;
-			//
-			if (force){
-				if(index >= _frames.length)
+			
+			if (force) {
+				if (index >= _frames.length)
 					_currentIndex = _frames.length -1;
-				if(index < -1)
+				if (index < -1)
 					_currentIndex = -1;
 				else
 					_currentIndex = index;
 				
-				if ((_currentIndex >= 0)&&(_currentIndex < _frames.length))
+				if ( (_currentIndex >= 0) && (_currentIndex < _frames.length) )
 					_currentFrame = _frames.getItemAt(_currentIndex) as FrameVO;
 				else
 					_currentFrame = null;

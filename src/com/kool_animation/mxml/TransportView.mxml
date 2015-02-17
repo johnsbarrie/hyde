@@ -24,6 +24,7 @@
 			public static const EVENT_FPS_CHANGED:String			= "event_fps_changed";
 			public static const TOOGLE_FULLSCREEN:String			= "TOOGLE_FULLSCREEN";
 			public static const TOOGLE_INCLUDE_LIVEVIEW:String		= "TOOGLE_INCLUDE_LIVEVIEW";
+			public static const TOOGLE_SHORTPLAY:String				= "TOOGLE_SHORTPLAY";
 			
 			[Bindable]
 			public var videoWidth:int
@@ -57,7 +58,11 @@
 				}
 			}
 			
-			private function toogleIncludeLiveView():void{
+			private function toogleShortPlay():void {
+				dispatchEvent(new Event(TOOGLE_SHORTPLAY));
+			}
+			
+			private function toogleIncludeLiveView():void {
 				dispatchEvent(new Event(TOOGLE_INCLUDE_LIVEVIEW));
 			}
 			
@@ -113,6 +118,9 @@
 	</fx:Script>
 		<s:HGroup width="100%" verticalAlign="middle" gap="-1" focusEnabled="false">
 			<s:Label id="tctext" text="Time : 00h:00m:00s:00ms -- Frame : 0" width="300" color="#FFFFFF"/>
+			<s:BitmapImage id="shortPlay" width="20" height="20"  source="@Embed(source='assets/pictos/play_over.png')" alpha=".8"/>
+			<s:CheckBox id="shortPlayCheckBox" focusEnabled="false" selected="true" click="toogleShortPlay()" toolTip="{resourceManager.getString('GUI_I18NS', 'short_playback')}"/>
+			<s:Spacer width="10"/>
 			<s:BitmapImage id="camera" width="20" height="20"  source="@Embed(source='assets/pictos/camera.png')" alpha=".8"/>
 			<s:CheckBox id="includeLiveViewCheckBox" focusEnabled="false" selected="true" click="toogleIncludeLiveView()" toolTip="{resourceManager.getString('GUI_I18NS', 'include_liveview')}"/>
 			<s:Spacer width="10"/>

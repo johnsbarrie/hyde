@@ -9,6 +9,7 @@ package com.kool_animation.model {
 	public class TakeTimeLineProxy extends AbstractTimeLineProxy {
 		public static const NAME:String = "TakeTimeLineProxy";		// Nom du proxy
 		public var includeLiveView:Boolean=true;
+		
 		private var skippedCurrentFrameForLive:Boolean;
 		/* Constructeur */
 		public function TakeTimeLineProxy(proxyName:String=NAME, data:Object=null) {

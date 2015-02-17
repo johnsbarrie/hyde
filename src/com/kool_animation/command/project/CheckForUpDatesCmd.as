@@ -9,12 +9,14 @@ package com.kool_animation.command.project {
 		
 		override public function execute(notification:INotification):void{
 				var visibleState:Boolean=notification.getBody() as Boolean;
-				
 				appUpdater.addEventListener(UpdateEvent.INITIALIZED, updateCheckNow);
-				appUpdater.updateURL = "http://hyde.kool-animation.com/air/update.xml";
+				//appUpdater.updateURL = "http://localhost:8001/air/update.xml"
+				/**
+				appUpdater.updateURL = "http://hyde.kool-animation.com/hyde/air_update.xml";
 				appUpdater.delay = 0.1;
 				appUpdater.isCheckForUpdateVisible = visibleState;
 				appUpdater.initialize();
+				*/
 		}
 			
 		private function updateCheckNow(event:UpdateEvent):void {
