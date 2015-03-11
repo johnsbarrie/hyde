@@ -31,9 +31,10 @@ package com.kool_animation.mediator.window {
 		}
 		
 		private function openWindow ():void {
-			aboutWindow.alwaysInFront = true;
-			aboutWindow.open (true);
+			this.aboutWindow.close();
 			this.aboutWindow = new AboutWindow();
+			this.aboutWindow.alwaysInFront = true;
+			this.aboutWindow.open (true);
 		}
 	}
 }

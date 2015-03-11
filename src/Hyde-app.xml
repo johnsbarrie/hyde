@@ -3,8 +3,8 @@
 	<id>com.lamenagerie.hyde</id>
 	<filename>Hyde</filename>
 	<name>Hyde Stop Motion</name>
-	<versionNumber>1.0.3</versionNumber>
-	<versionLabel>1.0.3</versionLabel>
+	<versionNumber>1.0.4</versionNumber>
+	<versionLabel>1.0.4</versionLabel>
 	<copyright>La Ménagerie and Zvviks</copyright>
 	<initialWindow>
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
@@ -15,10 +15,10 @@
         <visible>false</visible>
     </initialWindow>
 	<icon>
-		<image16x16>assets/logoApp/16_16.png</image16x16>
-		<image32x32>assets/logoApp/32_32.png</image32x32>
-		<image48x48>assets/logoApp/48_48.png</image48x48>
-		<image128x128>assets/logoApp/128_128.png</image128x128>
+		<image16x16>assets/logoApp/16x16.png</image16x16>
+		<image32x32>assets/logoApp/32x32.png</image32x32>
+		<image48x48>assets/logoApp/48x48.png</image48x48>
+		<image128x128>assets/logoApp/128x128.png</image128x128>
 	</icon>
 	<allowBrowserInvocation>true</allowBrowserInvocation>
 </application>

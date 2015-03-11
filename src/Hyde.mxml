@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx" backgroundColor="#8C8C8C" creationComplete="init();" width="800" height="600" xmlns:local="*" xmlns:ns="com.kool_animation.mxml.*" xmlns:ns1="com.kool_animation.mxml.window.*">
+					   xmlns:mx="library://ns.adobe.com/flex/mx" backgroundColor="#8C8C8C" creationComplete="init();" width="800" height="600" xmlns:local="*" xmlns:ns="com.kool_animation.mxml.*" xmlns:ns1="com.kool_animation.mxml.window.*" visible="false">
 	<fx:Metadata>
 		[ResourceBundle("GUI_I18NS")]
 	</fx:Metadata> 
@@ -11,8 +11,10 @@
 	<fx:Script>
 		<![CDATA[
 			import com.kool_animation.AppFacade;
+			import com.kool_animation.mxml.window.SplashWindow;
 			
 			private var facade:AppFacade = AppFacade.getInstance();
+			private var splashWindow:SplashWindow;
 			private function init():void {
 				this.nativeWindow.x			= 10;
 				this.nativeWindow.y			= 20;
@@ -23,10 +25,25 @@
 				var timer:Timer= new Timer(1,1);
 				timer.addEventListener(TimerEvent.TIMER, waitForStage);
 				timer.start();
+				openSplashWindow();
 			}
 			
 			private function waitForStage(evt:TimerEvent):void{
 				facade.startup();
+			}
+			
+			private function openSplashWindow():void{
+				var timer:Timer= new Timer(3000,1);
+				timer.addEventListener(TimerEvent.TIMER, closeSplashWindow);
+				timer.start();
+				this.splashWindow=new SplashWindow();
+				this.splashWindow.alwaysInFront = true;
+				this.splashWindow.open (true);
+			}
+			
+			private function closeSplashWindow(evt:Event):void{
+				this.splashWindow.close();
+				this.visible=true;
 			}
 		]]>
 	</fx:Script>
