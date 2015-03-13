@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" type="utility" backgroundColor="#555555" creationComplete="init()">
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="700" height="500" type="utility" backgroundColor="#555555" creationComplete="init()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -17,7 +17,7 @@
 		]]>
 	</fx:Script>
 	<s:VGroup horizontalAlign="center">
-		<s:Image width="400" height="225" source="@Embed(source='assets/logoApp/hyde_logo.png')"/>
+		<s:Image width="700" height="394" source="@Embed(source='assets/logoApp/hyde_logo_tranparent.png')"/>
 		<s:Label fontSize="14" color="#FFFFFF">Created by LA MENAGERIE and ZVVIKS</s:Label>
 		<s:Label id="versionNumber" fontSize="14" color="#FFFFFF"></s:Label>
 	</s:VGroup>

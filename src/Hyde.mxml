@@ -37,8 +37,10 @@
 				timer.addEventListener(TimerEvent.TIMER, closeSplashWindow);
 				timer.start();
 				this.splashWindow=new SplashWindow();
+				
 				this.splashWindow.alwaysInFront = true;
 				this.splashWindow.open (true);
+				
 			}
 			
 			private function closeSplashWindow(evt:Event):void{

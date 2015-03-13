@@ -444,7 +444,7 @@
 			</s:HGroup>
 		</s:Panel>
 		<s:HGroup id="logo_holder" width="600" height="30" horizontalAlign="center"  >
-			<s:Image width="428" height="295" source="@Embed(source='assets/logoApp/hyde_logo.png')"/>
+			<s:Image width="350" height="197" source="@Embed(source='assets/logoApp/hyde_logo_tranparent.png')"/>
 		</s:HGroup>		
 		<s:Panel id="listPanel" width="600" title="{resourceManager.getString('GUI_I18NS', 'recent')}" backgroundColor="#8C8C8C">
 			<s:VGroup>
