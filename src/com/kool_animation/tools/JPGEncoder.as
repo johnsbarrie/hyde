@@ -1,20 +1,25 @@
-//////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (C) 2003-2007 Adobe Systems Incorporated.
-//  All Rights Reserved. The following is Source Code and is subject to all
-//  restrictions on such code as contained in the End User License Agreement
-//  accompanying this product.
-//
-////////////////////////////////////////////////////////////////////////////////
+/**
+Hyde Stop Motion
+An Animation Film Software
+Copyright (c) 2015 lamenagerie.
+Conceived by Kolja Saksida and John Barrie 
+Coded by John Barrie  
+Further help by Xavier Boisnon
+   Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
 
-//////////////////////////////////////////////////////////////////////////////
-//
-//  Original Code from mx.graphics.codec.JPEGEncoder 
-//  Code has been heavily modified by Paraniod Ferret Productions
-//  Date: 12-09-2007
-//  
-////////////////////////////////////////////////////////////////////////////////
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU LESSER GENERAL PUBLIC LICENSE for more details.
+
+You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mutoscope.tools {
 		import com.pfp.events.JPEGAsyncCompleteEvent;
 		import flash.display.BitmapData;

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
+
 <application xmlns="http://ns.adobe.com/air/application/3.1">
 	<id>com.lamenagerie.hyde</id>
 	<filename>Hyde Stop Motion</filename>
 	<name>Hyde Stop Motion</name>
-	<versionNumber>1.0.4</versionNumber>
-	<versionLabel>1.0.4</versionLabel>
+	<versionNumber>1.0.5</versionNumber>
+	<versionLabel>1.0.5</versionLabel>
 	<copyright>La Ménagerie and Zvviks</copyright>
 	<initialWindow>
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>

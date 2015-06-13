@@ -1,18 +1,45 @@
+/**
+ Hyde Stop Motion
+ An Animation Film Software
+ Copyright (c) 2015 lamenagerie.
+ Conceived by Kolja Saksida and John Barrie 
+ Coded by John Barrie  
+ Further help by Xavier Boisnon
+    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ 
+ You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.kool_animation.model {
 	import com.kool_animation.AppFacade;
 	import com.kool_animation.constant.ProjectConstant;
 	import com.kool_animation.model.DiskPathsProxy;
 	import com.kool_animation.model.vo.PreferencesVO;
 	import com.kool_animation.tools.Primitive;
+	
+	import flash.desktop.NativeApplication;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.text.ReturnKeyLabel;
 	import flash.utils.Timer;
+	
 	import mx.controls.Alert;
 	import mx.resources.IResourceManager;
+	
 	import org.puremvc.as3.interfaces.IProxy;
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
@@ -40,6 +67,10 @@ package com.kool_animation.model {
 				xmlRoot.appendChild(new XML("<workspace>"+File.documentsDirectory.nativePath+"/Hyde"+"</workspace>"));
 				xmlRoot.appendChild(new XML("<isFirstLaunch>true</isFirstLaunch>"));
 				xmlRoot.appendChild(new XML("<acceptAutomaticUpdates>true</acceptAutomaticUpdates>"));
+				var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var ns:Namespace = appXml.namespace();
+				
+				xmlRoot.appendChild(new XML("<lastVersionFoundOnline>"+appXml.ns::versionNumber+"</lastVersionFoundOnline>"));
 				xmlRoot.appendChild(new XML("<defaultFPS>"+12.5+"</defaultFPS>"));
 				xmlRoot.appendChild(new XML("<alwaysAllowLiveView>"+false+"</alwaysAllowLiveView>"));
 				xmlRoot.appendChild(new XML("<defaultHeight>"+720+"</defaultHeight>"));
@@ -49,6 +80,7 @@ package com.kool_animation.model {
 				xmlRoot.appendChild(new XML("<defaultThumbFileWidth>"+80+"</defaultThumbFileWidth>"));
 				xmlRoot.appendChild(new XML("<language>"+"en_US"+"</language>"));
 				xmlRoot.appendChild(new XML("<timelinethumbsize>"+80+"</timelinethumbsize>"));
+				xmlRoot.appendChild(new XML("<playbackQuality>"+0+"</playbackQuality>"));
 				
 				preferencesWriteStream.open(file, FileMode.WRITE);
 				preferencesWriteStream.writeUTFBytes(xmlRoot.toXMLString());
@@ -69,7 +101,6 @@ package com.kool_animation.model {
 		
 		private function readPreferenceFile():void{
 			var file:File = File.applicationStorageDirectory.resolvePath(diskProxy.PREFERENCE_LIST_PATH);
-			
 			preferencesStream.addEventListener(Event.COMPLETE, onPreferencesOpened);
 			preferencesStream.addEventListener(IOErrorEvent.IO_ERROR, onPreferenceLoadingFailed);
 			preferencesStream.openAsync(file, FileMode.READ);
@@ -82,6 +113,7 @@ package com.kool_animation.model {
 			xml.isFirstLaunch == "true" ? preferencesVO.isFirstLaunch =true : preferencesVO.isFirstLaunch =false; 
 			xml.acceptAutomaticUpdates == "true" ? preferencesVO.acceptAutomaticUpdates =true : preferencesVO.acceptAutomaticUpdates =false;
 			preferencesVO.defaultFPS = Number(xml.defaultFPS);
+			preferencesVO.lastVersionFoundOnline=xml.lastVersionFoundOnline;
 			preferencesVO.alwaysAllowLiveView = Primitive.stringToBoolean(xml.alwaysAllowLiveView);
 			preferencesVO.cameraID = Number(xml.cameraID);
 			preferencesVO.defaultHeight = Number(xml.defaultHeight);
@@ -90,7 +122,9 @@ package com.kool_animation.model {
 			preferencesVO.defaultThumbFileHeight = Number(xml.defaultThumbFileHeight);
 			preferencesVO.defaultThumbFileWidth = Number(xml.defaultThumbFileWidth);
 			preferencesVO.language=xml.language;
-			if(Number(xml.timelinethumbsize)!=0){
+			preferencesVO.playbackQuality=Number(xml.playbackQuality);
+			
+			if (Number(xml.timelinethumbsize)!=0){
 				TimelineStatic.timelineImageWidth=Number(xml.timelinethumbsize);
 			}
 			
@@ -137,6 +171,11 @@ package com.kool_animation.model {
 		}
 		
 		/* GETTERS */
+		public function set playbackQuality(value:Number):void {
+			preferencesVO.playbackQuality = value;
+			savePreference();
+		}
+		
 		public function set defaultFPS(value:Number):void { 
 			preferencesVO.defaultFPS = value;
 			savePreference();
@@ -193,7 +232,7 @@ package com.kool_animation.model {
 			preferencesVO.cameraFPS = value; 
 			savePreference();
 		}
-
+		
 		public function set defaultThumbFileHeight(value:int):void {	
 			preferencesVO.defaultThumbFileHeight = value; 
 			savePreference();
@@ -214,8 +253,21 @@ package com.kool_animation.model {
 			savePreference();
 		}
 		
+		public function get playbackQuality():Number {
+			return preferencesVO.playbackQuality;
+		}
+		
 		public function get isFirstLaunch ():Boolean{
 			return preferencesVO.isFirstLaunch;
+		}
+		
+		public function get lastVersionFoundOnline():String{
+			return preferencesVO.lastVersionFoundOnline;
+		}
+		
+		public function set lastVersionFoundOnline(lastVersionFoundOnline:String):void{
+			preferencesVO.lastVersionFoundOnline=lastVersionFoundOnline;
+			savePreference();
 		}
 		
 		public function set acceptAutomaticUpdates (acceptAutomaticUpdates:Boolean):void{
@@ -229,17 +281,19 @@ package com.kool_animation.model {
 		/* GETTERS */
 		public function get defaultThumbFileWidth():int { return preferencesVO.defaultThumbFileWidth; }
 		public function get defaultThumbFileHeight():int { return preferencesVO.defaultThumbFileHeight; }
+		
 		public function get cameraFPS():Number {
 			var fps:Number=preferencesVO.cameraFPS;
-			if(isNaN(fps)){
+			if (isNaN(fps)){
 				fps=12;
 			}
-			
 			return fps; 
 		}
+		
 		public function get workspaceDirectory():String { 
 			return preferencesVO.workspace; 
 		}
+		
 		public function get defaultWidth():int { return preferencesVO.defaultWidth; }
 		public function get defaultHeight():int { return preferencesVO.defaultHeight; }
 		public function get cameraID():int { return preferencesVO.cameraID; }

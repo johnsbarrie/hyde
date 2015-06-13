@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Hyde Stop Motion
+An Animation Film Software
+Copyright (c) 2015 lamenagerie.
+Conceived by Kolja Saksida and John Barrie 
+Coded by John Barrie  
+Further help by Xavier Boisnon
+   Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU LESSER GENERAL PUBLIC LICENSE for more details.
+
+You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				   xmlns:s="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx"  height="30" 
@@ -9,10 +31,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import flash.net.sendToURL;
-			
 			import mx.collections.ArrayCollection;
-			
 			import spark.events.IndexChangeEvent;
 			
 			public static const EVENT_GOTO_FIRST:String				= "event_goto_first";
@@ -22,6 +41,7 @@
 			public static const EVENT_SWITCH_PLAY:String			= "event_switch_play";
 			public static const EVENT_SWITCH_LOOP:String			= "event_swtich_loop";
 			public static const EVENT_FPS_CHANGED:String			= "event_fps_changed";
+			public static const EVENT_QUALITY_CHANGED:String			= "event_quality_changed";
 			public static const TOOGLE_FULLSCREEN:String			= "TOOGLE_FULLSCREEN";
 			public static const TOOGLE_INCLUDE_LIVEVIEW:String		= "TOOGLE_INCLUDE_LIVEVIEW";
 			public static const TOOGLE_SHORTPLAY:String				= "TOOGLE_SHORTPLAY";
@@ -41,14 +61,14 @@
 			
 			[Embed(source="assets/pictos/play_over.png")]
 			[Bindable] private var imgPlayClass:Class;
-			
+			/*
 			public function initFPS(fps:Number):void{
 				for (var i:int=0; i<fpsComboBox.dataProvider.length; i++){
 					if(fpsComboBox.dataProvider.getItemAt(i)==fps){
 						fpsComboBox.selectedIndex=i;
 					}
 				}
-			}
+			}*/
 			
 			public function setLoopState(state:Boolean):void {
 				if(state) {
@@ -101,10 +121,15 @@
 			private function onLoop():void {
 				dispatchEvent(new Event(EVENT_SWITCH_LOOP));
 			}
-			
+	
 			private function fpsChanged(event:IndexChangeEvent):void {
 				var fps:String=String(fpsComboBox.selectedItem);
 				dispatchEvent(new DataEvent(EVENT_FPS_CHANGED, false, false, fps));
+			}
+			
+			private function playbackQualityChanged(event:IndexChangeEvent):void{
+				var qualityIndex:String=String(qualityComboBox.selectedIndex);
+				dispatchEvent(new DataEvent(EVENT_QUALITY_CHANGED, false, false, qualityIndex));
 			}
 			
 			private function onFullscreen():void{
@@ -156,6 +181,15 @@
 						<fx:Number>40</fx:Number>
 						<fx:Number>50</fx:Number>
 						<fx:Number>60</fx:Number>
+					</mx:ArrayList>
+				</s:dataProvider>
+			</s:DropDownList>
+			<s:Spacer width="10"/>
+			<s:DropDownList id="qualityComboBox" selectedIndex="0" width="70" focusEnabled="false" change="playbackQualityChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','playBackQuality')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
+				<s:dataProvider>
+					<mx:ArrayList>
+						<fx:String>High</fx:String>
+						<fx:String>Low</fx:String>
 					</mx:ArrayList>
 				</s:dataProvider>
 			</s:DropDownList>

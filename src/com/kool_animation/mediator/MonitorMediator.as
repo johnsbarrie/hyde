@@ -1,3 +1,25 @@
+/**
+ Hyde Stop Motion
+ An Animation Film Software
+ Copyright (c) 2015 lamenagerie.
+ Conceived by Kolja Saksida and John Barrie 
+ Coded by John Barrie  
+ Further help by Xavier Boisnon
+    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ 
+ You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.kool_animation.mediator
 {
 	import com.kool_animation.AppFacade;
@@ -12,9 +34,7 @@ package com.kool_animation.mediator
 	
 	import flash.events.Event;
 	import flash.media.Camera;
-	import flash.utils.flash_proxy;
-	
-	import mx.controls.Alert;
+
 	
 	import spark.components.VideoDisplay;
 	import spark.components.mediaClasses.DynamicStreamingVideoItem;
@@ -81,7 +101,11 @@ package com.kool_animation.mediator
 					break;
 				case TakeConstant.TRANSPORT_PREPARE_TO_PLAY :
 					cleanMonitor();
-					showFrame(0, QUALITY_PREVIEW);
+					if(preferencesProxy.playbackQuality==1){
+						showFrame(0, QUALITY_PREVIEW);
+					}else{
+						showFrame(0, QUALITY_FULL);
+					}
 					break;
 				case ProjectConstant.PROJECT_LOAD_TAKE_SUCCESS:
 					var takeViewMediator:TakeViewMediator = facade.retrieveMediator(TakeViewMediator.NAME) as TakeViewMediator;
@@ -138,6 +162,7 @@ package com.kool_animation.mediator
 		}
 		
 		public function updateFlips():void{
+			
 			if (this.projectProxy.flippedHorizontal) {
 				monitorView.scaleX = -1;
 				monitorView.x = monitorView.width;
@@ -163,6 +188,7 @@ package com.kool_animation.mediator
 				monitorView.y = 0;
 				monitorView.frameHolder.y = 0;
 			}
+			
 		}
 		
 		/* Deconnection du flux camera */
@@ -181,7 +207,11 @@ package com.kool_animation.mediator
 				monitorView.frameContainer.addEventListener(spark.events.ElementExistenceEvent.ELEMENT_ADD, onImageUpdated);
 				
 				if (timeLineProxy.isPlaying) {
-					monitorView.frameContainer.addElement(frame.preView);
+					if(preferencesProxy.playbackQuality==1){
+						monitorView.frameContainer.addElement(frame.preView);
+					}else{
+						monitorView.frameContainer.addElement(frame.view);
+					}
 				} else {
 					switch (quality){
 						case QUALITY_DRAFT:
@@ -235,6 +265,7 @@ package com.kool_animation.mediator
 		}
 		
 		public function get monitorView():MonitorView { return viewComponent as MonitorView; }
+		
 		public function get camera():VideoDisplay {
 			var videoDisplay:VideoDisplay=monitorView.videoDisplay;
 			return videoDisplay; 

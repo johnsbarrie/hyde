@@ -1,3 +1,25 @@
+/**
+ Hyde Stop Motion
+ An Animation Film Software
+ Copyright (c) 2015 lamenagerie.
+ Conceived by Kolja Saksida and John Barrie 
+ Coded by John Barrie  
+ Further help by Xavier Boisnon
+    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ 
+ You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.kool_animation.constant
 {
 	public class TakeConstant
@@ -32,6 +54,9 @@ package com.kool_animation.constant
 		public static const TRANSPORT_SWITCH_LOOP:String			= "TakeConstant.TRANSPORT_SWITCH_LOOP";
 		public static const TRANSPORT_SET_FPS:String				= "TakeConstant.TRANSPORT_SET_FPS";
 		public static const TRANSPORT_FPS_CHANGED:String			= "CaptureContant.transport_fps_changed"
+		public static const TRANSPORT_SET_PLAYBACK_QUALITY:String	= "TakeConstant.TRANSPORT_SET_PLAYBACK_QUALITY";
+		public static const TRANSPORT_PLAYBACK_QUALITY_CHANGED:String = "TakeConstant.PLAYBACK_QUALITY_CHANGED"
+		
 		public static const GOTO_NEXT_FRAME:String					= "TakeConstant.GOTO_NEXT_FRAME";
 		public static const GOTO_PREV_FRAME:String					= "TakeConstant.GOTO_PREV_FRAME";
 		

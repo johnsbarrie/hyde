@@ -1,6 +1,29 @@
+/**
+ Hyde Stop Motion
+ An Animation Film Software
+ Copyright (c) 2015 lamenagerie.
+ Conceived by Kolja Saksida and John Barrie 
+ Coded by John Barrie  
+ Further help by Xavier Boisnon
+    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ 
+ You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.kool_animation.mediator {
 	import com.kool_animation.constant.ProjectConstant;
 	import com.kool_animation.constant.TakeConstant;
+	import com.kool_animation.model.PreferencesProxy;
 	import com.kool_animation.model.TakeTimeLineProxy;
 	import com.kool_animation.mxml.TransportView;
 	
@@ -15,7 +38,9 @@ package com.kool_animation.mediator {
 	
 	public class TransportMediator extends Mediator {
 		public static const NAME:String="TransportMediator";
+		private var _preferencesProxy:PreferencesProxy;
 		private var _timeLineProxy:TakeTimeLineProxy;
+		
 		private var tcTimer:Timer;
 		
 		/* Constructeur */
@@ -32,6 +57,8 @@ package com.kool_animation.mediator {
 			transportView.addEventListener(TransportView.EVENT_SWITCH_LOOP, onSwitchLoop);
 			transportView.addEventListener(TransportView.EVENT_SWITCH_PLAY, onSwitchPlay);
 			transportView.addEventListener(TransportView.EVENT_FPS_CHANGED, onFPSChanged);
+			transportView.addEventListener(TransportView.EVENT_QUALITY_CHANGED, onQualityChanged);
+			
 			transportView.addEventListener(TransportView.TOOGLE_FULLSCREEN, onToggleFullscreen);
 			transportView.addEventListener(TransportView.TOOGLE_SHORTPLAY, onToggleShortPlay);
 			
@@ -46,7 +73,8 @@ package com.kool_animation.mediator {
 				TakeConstant.TRANSPORT_SWITCH_LOOP,
 				TakeConstant.TRANSPORT_SET_FPS,
 				TakeConstant.TRANSPORT_FPS_CHANGED,
-				TakeConstant.CURRENT_FRAME_CHANGED
+				TakeConstant.CURRENT_FRAME_CHANGED,
+				ProjectConstant.PREFERENCES_LOADED
 			];
 		}
 		
@@ -55,6 +83,9 @@ package com.kool_animation.mediator {
 			switch(note.getName()) {
 				case TakeConstant.TRANSPORT_PLAY:
 				case TakeConstant.TRANSPORT_STOP:
+				case ProjectConstant.PREFERENCES_LOADED:
+					onPreferenceLoaded();
+					break;
 				case TakeConstant.TRANSPORT_SWITCH_PLAY:
 					setTimeout(updatePlayState,1);
 					break;
@@ -68,11 +99,6 @@ package com.kool_animation.mediator {
 					currentFrameChanged ();
 					break;
 			}
-		}
-		
-		/** initialises fps from preferences when preferences are loaded */
-		public function initFPS (fps:Number):void{
-			transportView.initFPS (fps);
 		}
 		
 		private function currentFrameChanged():void {
@@ -100,6 +126,20 @@ package com.kool_animation.mediator {
 			var fps:Number=Number(e.data);
 			sendNotification(TakeConstant.TRANSPORT_SET_FPS, fps); 
 		};
+		
+		private function onQualityChanged (e:DataEvent):void {
+			var quality:Number=Number(e.data);
+			sendNotification(TakeConstant.TRANSPORT_SET_PLAYBACK_QUALITY, quality); 
+		};
+		
+		
+		private function onPreferenceLoaded():void{
+			transportView.qualityComboBox.selectedIndex=this.preferencesProxy.playbackQuality;
+			var fps:Number = this.preferencesProxy.defaultFPS;
+			var index:int = transportView.fpsComboBox.dataProvider.getItemIndex(fps); 
+			transportView.fpsComboBox.selectedIndex=index;
+		}
+		
 		private function onGotoFirst (e:Event):void { sendNotification(TakeConstant.GOTO_FIRST_FRAME); }
 		private function onGotoLast (e:Event):void { sendNotification(TakeConstant.GOTO_LAST_FRAME); }
 		private function onGotoNext (e:Event):void { sendNotification(TakeConstant.GOTO_NEXT_FRAME); }
@@ -112,10 +152,18 @@ package com.kool_animation.mediator {
 		
 		public function get transportView():TransportView { return viewComponent as TransportView; }
 		
+		public function get preferencesProxy():PreferencesProxy {
+			if (!_preferencesProxy)
+				_preferencesProxy = facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy;
+			return _preferencesProxy; 
+		}
+		
 		public function get timeLineProxy():TakeTimeLineProxy {
 			if (!_timeLineProxy)
 				_timeLineProxy = facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;
 			return _timeLineProxy; 
 		}
+		
+		
 	}
 }

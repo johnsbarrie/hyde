@@ -1,3 +1,25 @@
+/**
+ Hyde Stop Motion
+ An Animation Film Software
+ Copyright (c) 2015 lamenagerie.
+ Conceived by Kolja Saksida and John Barrie 
+ Coded by John Barrie  
+ Further help by Xavier Boisnon
+    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU LESSER GENERAL PUBLIC LICENSE for more details.
+ 
+ You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.CurrentFrameChangedCmd;
 	import com.kool_animation.command.take.GotoFirstFrameCmd;
@@ -12,6 +34,7 @@ package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.SelectNextFrameCmd;
 	import com.kool_animation.command.take.SelectPrevFrameCmd;
 	import com.kool_animation.command.take.SetFramePerSecCmd;
+	import com.kool_animation.command.take.SetPlayBackQualityCmd;
 	import com.kool_animation.command.take.ShowLiveVideoCmd;
 	import com.kool_animation.command.take.StopCmd;
 	import com.kool_animation.command.take.SwitchLoopCmd;
@@ -22,6 +45,7 @@ package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.ToggleGridCmd;
 	import com.kool_animation.command.take.ToggleHorizontalFlipCmd;
 	import com.kool_animation.command.take.ToggleLiveVideoCmd;
+	import com.kool_animation.command.take.ToggleShortplayCmd;
 	import com.kool_animation.command.take.ToggleVerticalFlipCmd;
 	import com.kool_animation.command.take.ToggleliveViewState;
 	import com.kool_animation.command.take.edition.CaptureFrameCmd;
@@ -32,14 +56,13 @@ package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.edition.ImportImageCmd;
 	import com.kool_animation.command.take.edition.InsertPhotoBucketFramesCmd;
 	import com.kool_animation.command.take.edition.InvertedPasteFramesCmd;
-	import com.kool_animation.command.take.edition.PasteFramesBeforeCmd;
 	import com.kool_animation.command.take.edition.PasteFramesAfterCmd;
+	import com.kool_animation.command.take.edition.PasteFramesBeforeCmd;
 	import com.kool_animation.command.take.edition.ReverseFramesCmd;
 	import com.kool_animation.constant.TakeConstant;
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
-	import com.kool_animation.command.take.ToggleShortplayCmd;
 	
 	public class SetupTakeCommands extends SimpleCommand {
 		override public function execute(notification:INotification):void {
@@ -52,6 +75,8 @@ package com.kool_animation.command.setup.take {
 			facade.registerCommand(TakeConstant.TRANSPORT_SWITCH_LOOP, SwitchLoopCmd);
 			facade.registerCommand(TakeConstant.TRANSPORT_STOP, StopCmd);
 			facade.registerCommand(TakeConstant.TRANSPORT_SET_FPS, SetFramePerSecCmd);
+			facade.registerCommand(TakeConstant.TRANSPORT_SET_PLAYBACK_QUALITY, SetPlayBackQualityCmd);
+			
 			facade.registerCommand(TakeConstant.CURRENT_FRAME_CHANGED, CurrentFrameChangedCmd);
 			facade.registerCommand(TakeConstant.COPY_FRAMES, CopyFramesCmd);
 			facade.registerCommand(TakeConstant.CUT_FRAMES, CutFramesCmd);
