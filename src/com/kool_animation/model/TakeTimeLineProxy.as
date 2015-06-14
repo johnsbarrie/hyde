@@ -72,12 +72,21 @@ package com.kool_animation.model {
 		}
 		
 		public function flushMemory():void{
-			if(_frames.length>200){
-				for(var i:int=0; i<(_frames.length-200); i++){
+			if(_frames.length>50){
+				for(var i:int=0; i<(_frames.length-50); i++){
 					var frameVO:FrameVO=_frames.getItemAt(i) as FrameVO;
-					if (i!=currentIndex) {
+					if (i!=currentIndex&& i!=currentIndex-1) {
 						frameVO.flushMemory();
 					}
+				}
+			}
+		}
+		
+		public function playBackFlush():void{
+			if(currentIndex>10){
+				for(var i:int=0; i<(currentIndex-40); i++){
+					var frameVO:FrameVO=_frames.getItemAt(i) as FrameVO;
+					frameVO.flushMemory();
 				}
 			}
 		}

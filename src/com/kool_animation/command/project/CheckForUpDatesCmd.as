@@ -39,7 +39,7 @@ package com.kool_animation.command.project {
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
-	
+	import flash.system.Capabilities;
 	public class CheckForUpDatesCmd extends SimpleCommand {
 		private var _preferencesProxy:PreferencesProxy;		// proxy des preferences
 		private var urlLoader:URLLoader = new URLLoader();
@@ -51,7 +51,7 @@ package com.kool_animation.command.project {
 			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
 			var ns:Namespace = appXml.namespace();
 			
-			var urlString:String="http://hyde.kool-animation.com/version?version="+appXml.ns::versionNumber;
+			var urlString:String="http://hyde.kool-animation.com/version?version="+appXml.ns::versionNumber+"&system="+Capabilities.os;
 			urlReq.url = urlString;
 			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 			urlLoader.addEventListener("complete", onComplete);
@@ -72,7 +72,7 @@ package com.kool_animation.command.project {
 		
 		private function version_available(evt:CloseEvent):void{
 			if (evt.detail == Alert.YES) {
-				navigateToURL(new URLRequest("http://kool-animation.com/download"));
+				navigateToURL(new URLRequest("http://hyde.kool-animation.com/"));
 			}else if (evt.detail==Alert.NO){
 				preferencesProxy.lastVersionFoundOnline=versionXML.version;
 			}

@@ -40,7 +40,6 @@ package com.kool_animation.command.take.edition {
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.media.Video;
-	import flash.system.System;
 	
 	import mx.containers.TitleWindow;
 	import mx.core.SoundAsset;
@@ -101,11 +100,11 @@ package com.kool_animation.command.take.edition {
 			// Ajoute une entrée a l'historique
 			sendNotification (ProjectConstant.ADD_HISTORY);				
 			// Declanche un son pour la photo
-			cameraSound.play ();
+			cameraSound.play();
 			// Création de la nouvelle frame
 			var diskPathsProxy:DiskPathsProxy = facade.retrieveProxy (DiskPathsProxy.NAME) as DiskPathsProxy;
 			var id:String=diskPathsProxy.createFrameId ();
-			var dataService:FrameFileVO = diskPathsProxy.getFrameFileVO (id);
+			var dataService:FrameFileVO = diskPathsProxy.getFrameFileVO(id);
 			frame = new FrameVO (id, dataService);
 			
 			imageSetCreator = new ImageSetCreator (facade.retrieveProxy(ProjectProxy.NAME) as ProjectProxy);
@@ -137,7 +136,10 @@ package com.kool_animation.command.take.edition {
 			frame.saveJpg();
 			frame.flushJpgMemory();
 			timeLineProxy.flushMemory();
-			//trace(System.totalMemory / 1024);
+			imageSetCreator.removeEventListener (ImageSetCreator.JPGCREATED_EVENT, onJPGCreationComplete);
+			imageSetCreator.removeEventListener (Event.COMPLETE, onCreationComplete);
+			imageSetCreator.removeEventListener (ProgressEvent.PROGRESS, onImageSetCreationProgress);
+
 		}
 		
 		private function openPopup():void {

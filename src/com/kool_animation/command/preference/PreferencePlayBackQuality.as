@@ -41,5 +41,4 @@ package com.kool_animation.command.preference
 				}
 			}
 		}
-import com.kool_animation.command.preference;
 

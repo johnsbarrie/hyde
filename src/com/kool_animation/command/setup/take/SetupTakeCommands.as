@@ -33,6 +33,7 @@ package com.kool_animation.command.setup.take {
 	import com.kool_animation.command.take.SelectAllFramesCmd;
 	import com.kool_animation.command.take.SelectNextFrameCmd;
 	import com.kool_animation.command.take.SelectPrevFrameCmd;
+	import com.kool_animation.command.take.SetCaptureNumberCmd;
 	import com.kool_animation.command.take.SetFramePerSecCmd;
 	import com.kool_animation.command.take.SetPlayBackQualityCmd;
 	import com.kool_animation.command.take.ShowLiveVideoCmd;
@@ -109,6 +110,8 @@ package com.kool_animation.command.setup.take {
 			
 			facade.registerCommand(TakeConstant.TOGGLE_LIVE_VIEW_STATE, ToggleliveViewState);
 			facade.registerCommand(TakeConstant.TOGGLE_SHORTPLAY, ToggleShortplayCmd);
+			facade.registerCommand(TakeConstant.CAPTURE_NUMBER_CHANGED, SetCaptureNumberCmd);
+			
 		}
 	}
 }

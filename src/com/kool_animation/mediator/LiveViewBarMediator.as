@@ -25,23 +25,24 @@ package com.kool_animation.mediator
 {
 	import com.kool_animation.constant.ProjectConstant;
 	import com.kool_animation.constant.TakeConstant;
+	import com.kool_animation.model.PreferencesProxy;
 	import com.kool_animation.model.ProjectProxy;
 	import com.kool_animation.mxml.LiveViewBar;
 	
 	import flash.events.DataEvent;
 	import flash.events.Event;
 	
-	import mx.controls.Alert;
-	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.mediator.Mediator;
 	
 	public class LiveViewBarMediator extends Mediator
 	{
-		public static const NAME:String			= "LiveViewBarMediator";
+		public static const NAME:String = "LiveViewBarMediator";
+		private var _preferencesProxy:PreferencesProxy;
 		
 		public function LiveViewBarMediator(viewComponent:Object=null) {
 			super(NAME, viewComponent);
+			
 			liveViewBar.addEventListener(LiveViewBar.EVENT_TOGGLE_VIDEO, toogleLiveView);
 			liveViewBar.addEventListener(LiveViewBar.EVENT_AUTOMATISER, openTimeLapse);
 			liveViewBar.addEventListener(LiveViewBar.EVENT_CAPTURE, captureFrame);
@@ -49,19 +50,24 @@ package com.kool_animation.mediator
 			liveViewBar.addEventListener(LiveViewBar.EVENT_TOGGLE_GRID, toggleGrid);
 			liveViewBar.addEventListener(LiveViewBar.EVENT_TOGGLE_HORIZONTAL_FLIP, toggleHorizontalFlip);
 			liveViewBar.addEventListener(LiveViewBar.EVENT_TOGGLE_VERTICAL_FLIP, toggleVerticalFlip);
+			liveViewBar.addEventListener(LiveViewBar.EVENT_CAPTURE_NUMBER_CHANGED, captureNumberChanged);
 		}
 		
 		override public function listNotificationInterests():Array {
 			return [
 				TakeConstant.TOGGLE_HORIZONTAL_FLIPPED,
 				TakeConstant.TOGGLE_VERTICAL_FLIPPED,
-				TakeConstant.GRID_TOGGLED
+				TakeConstant.GRID_TOGGLED,
+				ProjectConstant.PREFERENCES_LOADED
 			];
 		}
 		
 		/* Gestion des notifications de l'application */
 		override public function handleNotification(note:INotification):void {
 			switch(note.getName()) {
+				case ProjectConstant.PREFERENCES_LOADED:
+					liveViewBar.captureComboBox.selectedIndex=preferencesProxy.captureNumber;
+					break;
 				case TakeConstant.TOGGLE_HORIZONTAL_FLIPPED:
 					liveViewBar.horizontalFlipped(this.projectProxy.flippedHorizontal);
 					break;
@@ -107,11 +113,21 @@ package com.kool_animation.mediator
 			liveViewBar.shownLiveViewButtons(state);
 		}
 		
+		private function captureNumberChanged (e:DataEvent):void {
+			var captureNumber:Number=Number(e.data);
+			sendNotification(TakeConstant.CAPTURE_NUMBER_CHANGED, captureNumber); 
+		};
+			
 		public function get captureImageNumber():int{
 			return liveViewBar.captureComboBox.selectedItem;
 		}
 		
 		public function get liveViewBar():LiveViewBar { return viewComponent as LiveViewBar; }
 		public function get projectProxy():ProjectProxy {  return facade.retrieveProxy(ProjectProxy.NAME) as ProjectProxy; }
+		public function get preferencesProxy():PreferencesProxy{
+			if (!_preferencesProxy)
+				_preferencesProxy = facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy;
+			return _preferencesProxy; 
+		}
 	}
 }

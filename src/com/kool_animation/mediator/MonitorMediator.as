@@ -101,7 +101,7 @@ package com.kool_animation.mediator
 					break;
 				case TakeConstant.TRANSPORT_PREPARE_TO_PLAY :
 					cleanMonitor();
-					if(preferencesProxy.playbackQuality==1){
+					if(preferencesProxy.playbackQuality==1 || timeLineProxy.numberFrames>300){
 						showFrame(0, QUALITY_PREVIEW);
 					}else{
 						showFrame(0, QUALITY_FULL);
@@ -207,11 +207,12 @@ package com.kool_animation.mediator
 				monitorView.frameContainer.addEventListener(spark.events.ElementExistenceEvent.ELEMENT_ADD, onImageUpdated);
 				
 				if (timeLineProxy.isPlaying) {
-					if(preferencesProxy.playbackQuality==1){
+					if(preferencesProxy.playbackQuality==1 || timeLineProxy.numberFrames>300){
 						monitorView.frameContainer.addElement(frame.preView);
 					}else{
 						monitorView.frameContainer.addElement(frame.view);
 					}
+					timeLineProxy.playBackFlush();
 				} else {
 					switch (quality){
 						case QUALITY_DRAFT:

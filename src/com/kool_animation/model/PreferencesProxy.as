@@ -71,7 +71,7 @@ package com.kool_animation.model {
 				var ns:Namespace = appXml.namespace();
 				
 				xmlRoot.appendChild(new XML("<lastVersionFoundOnline>"+appXml.ns::versionNumber+"</lastVersionFoundOnline>"));
-				xmlRoot.appendChild(new XML("<defaultFPS>"+12.5+"</defaultFPS>"));
+				xmlRoot.appendChild(new XML("<defaultFPS>"+25+"</defaultFPS>"));
 				xmlRoot.appendChild(new XML("<alwaysAllowLiveView>"+false+"</alwaysAllowLiveView>"));
 				xmlRoot.appendChild(new XML("<defaultHeight>"+720+"</defaultHeight>"));
 				xmlRoot.appendChild(new XML("<defaultWidth>"+1280+"</defaultWidth>"));	
@@ -81,6 +81,7 @@ package com.kool_animation.model {
 				xmlRoot.appendChild(new XML("<language>"+"en_US"+"</language>"));
 				xmlRoot.appendChild(new XML("<timelinethumbsize>"+80+"</timelinethumbsize>"));
 				xmlRoot.appendChild(new XML("<playbackQuality>"+0+"</playbackQuality>"));
+				xmlRoot.appendChild(new XML("<captureNumber>"+1+"</captureNumber>"));
 				
 				preferencesWriteStream.open(file, FileMode.WRITE);
 				preferencesWriteStream.writeUTFBytes(xmlRoot.toXMLString());
@@ -123,6 +124,7 @@ package com.kool_animation.model {
 			preferencesVO.defaultThumbFileWidth = Number(xml.defaultThumbFileWidth);
 			preferencesVO.language=xml.language;
 			preferencesVO.playbackQuality=Number(xml.playbackQuality);
+			preferencesVO.captureNumber=Number(xml.captureNumber);
 			
 			if (Number(xml.timelinethumbsize)!=0){
 				TimelineStatic.timelineImageWidth=Number(xml.timelinethumbsize);
@@ -251,6 +253,15 @@ package com.kool_animation.model {
 		public function set isFirstLaunch (firstLaunch:Boolean):void{
 			preferencesVO.isFirstLaunch=firstLaunch;
 			savePreference();
+		}
+		
+		public function set captureNumber (captureNumber:Number):void{
+			preferencesVO.captureNumber=captureNumber;
+			savePreference();
+		}
+		
+		public function get captureNumber():Number{
+			return preferencesVO.captureNumber;
 		}
 		
 		public function get playbackQuality():Number {

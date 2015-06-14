@@ -170,7 +170,8 @@ package com.kool_animation.model
 		
 		public function flushMemory():void{
 			_view.source=null;
-			_preView.source	=null;		
+			_preView.source	=null;
+			_thumb.source	=null;
 		}
 		
 		public function flushJpgMemory():void{

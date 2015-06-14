@@ -134,6 +134,9 @@ package com.kool_animation.mediator {
 		
 		
 		private function onPreferenceLoaded():void{
+
+			
+			
 			transportView.qualityComboBox.selectedIndex=this.preferencesProxy.playbackQuality;
 			var fps:Number = this.preferencesProxy.defaultFPS;
 			var index:int = transportView.fpsComboBox.dataProvider.getItemIndex(fps); 

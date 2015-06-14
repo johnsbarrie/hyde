@@ -97,5 +97,6 @@ package com.kool_animation.constant
 		
 		public static const TIMELINE_ZOOMED_IN:String 		= "TakeConstant.TIMELINE_ZOOMED_IN";
 		public static const TIMELINE_ZOOMED_OUT:String 		= "TakeConstant.TIMELINE_ZOOMED_OUT";
+		public static const CAPTURE_NUMBER_CHANGED:String 		= "TakeConstant.CAPTURE_NUMBER_CHANGED";
 	}	
 }

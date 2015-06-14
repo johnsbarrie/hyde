@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<![CDATA[
 			import mx.events.SliderEvent;
 			
+			import spark.events.IndexChangeEvent;
+			
 			public static const EVENT_CAPTURE:String				= "event_capture";
 			public static const EVENT_AUTOMATISER:String			= "event_automatiser";
 			public static const EVENT_ONIONSKIN_VALUE:String        = "event_onion_skin_value";
@@ -38,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			public static const EVENT_TOGGLE_GRID:String			= "event_toggle_grid";
 			public static const EVENT_TOGGLE_VERTICAL_FLIP:String	= "event_toggle_vertical_flip";
 			public static const EVENT_TOGGLE_HORIZONTAL_FLIP:String	= "event_toggle_horizontal_flip";
-			
+			public static const EVENT_CAPTURE_NUMBER_CHANGED:String	= "event_capture_number_changed";
 			private function onCapture():void {
 				dispatchEvent(new Event(EVENT_CAPTURE));
 			}
@@ -92,6 +94,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				verticalFlipButton.visible=state;
 				horizontalFlipButton.visible=state;
 			}
+			
+			public function captureNumberChanged(event:IndexChangeEvent):void{
+				var qualityIndex:String=String(captureComboBox.selectedIndex);
+				dispatchEvent(new DataEvent(EVENT_CAPTURE_NUMBER_CHANGED, false, false, qualityIndex));
+			}
 		]]>
 	</fx:Script>
 	<s:HGroup width="100%" height="30" verticalAlign="middle"  gap="10" paddingLeft="10" paddingRight="10" >
@@ -103,7 +110,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<mx:Slider id="onionSkinSlider" chromeColor="#FFFFFF" toolTip="{resourceManager.getString('GUI_I18NS'
 				   ,'onion_skin')}" focusEnabled="false"  mouseUp="changeFocus()" mouseOut="changeFocus()"  labelOffset="30" labels="[0, 100%]" value="100" liveDragging="true" change="onOnionsSliderChanged(event)" minimum="0" maximum="100" width="80" height="30"/>
 		<s:Spacer width="40"/>
-		<s:DropDownList id="captureComboBox"  toolTip="{resourceManager.getString('GUI_I18NS' ,'capture_quantity')}" selectedIndex="0" width="50" focusEnabled="false" chromeColor="#3C3C3C"  color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939" height="20">
+		<s:DropDownList id="captureComboBox" change="captureNumberChanged(event)"  toolTip="{resourceManager.getString('GUI_I18NS' ,'capture_quantity')}" selectedIndex="1" width="50" focusEnabled="false" chromeColor="#3C3C3C"  color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939" height="20">
 			<s:dataProvider>
 				<mx:ArrayList>
 					<fx:Number>1</fx:Number>

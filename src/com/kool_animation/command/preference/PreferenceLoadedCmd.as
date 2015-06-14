@@ -34,6 +34,7 @@ package com.kool_animation.command.preference {
 			var preferenceWindowMediator:PreferenceWindowMediator= facade.retrieveMediator(PreferenceWindowMediator.NAME) as PreferenceWindowMediator;
 			preferenceWindowMediator.setLanguage(preferencesProxy.language);
 			
+			
 			if (preferencesProxy.isFirstLaunch  || preferencesProxy.acceptAutomaticUpdates) { sendNotification(ProjectConstant.CHECK_FOR_UPDATES, false); }
 			
 			var timeLineProxy:TakeTimeLineProxy = facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;

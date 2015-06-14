@@ -24,7 +24,6 @@ package com.kool_animation.model.vo {
 	import com.kool_animation.model.TimelineStatic;
 
 	public class PreferencesVO {
-		
 		public var workspace:String;		// Chemin du workspace
 		public var isFirstLaunch:Boolean;
 		public var acceptAutomaticUpdates:Boolean;
@@ -39,6 +38,7 @@ package com.kool_animation.model.vo {
 		public var defaultThumbFileWidth:int;		// Largeur des fichiers thumb
 		public var language:String;
 		public var playbackQuality:int;
+		public var captureNumber:int;
 		
 		public function PreferencesVO(){}
 		
@@ -59,6 +59,7 @@ package com.kool_animation.model.vo {
 			xml.language=language;
 			xml.timelinethumbsize=TimelineStatic.timelineImageWidth;
 			xml.playbackQuality=playbackQuality;
+			xml.captureNumber=captureNumber;
 			return xml;
 		}
 	}
