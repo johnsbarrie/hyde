@@ -47,12 +47,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			public static const TOOGLE_SHORTPLAY:String				= "TOOGLE_SHORTPLAY";
 			
 			[Bindable]
-			public var videoWidth:int
+			public var videoWidth:int;
 			[Bindable]
 			public var videoHeight:int;
 			
 			[Bindable]
-			private var playing:Boolean
+			private var playing:Boolean;
 			[Bindable]
 			public var namesCamera:ArrayCollection;
 			
@@ -61,14 +61,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			
 			[Embed(source="assets/pictos/play_over.png")]
 			[Bindable] private var imgPlayClass:Class;
-			/*
-			public function initFPS(fps:Number):void{
-				for (var i:int=0; i<fpsComboBox.dataProvider.length; i++){
-					if(fpsComboBox.dataProvider.getItemAt(i)==fps){
-						fpsComboBox.selectedIndex=i;
-					}
-				}
-			}*/
 			
 			public function setLoopState(state:Boolean):void {
 				if(state) {

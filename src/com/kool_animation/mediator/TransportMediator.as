@@ -40,7 +40,6 @@ package com.kool_animation.mediator {
 		public static const NAME:String="TransportMediator";
 		private var _preferencesProxy:PreferencesProxy;
 		private var _timeLineProxy:TakeTimeLineProxy;
-		
 		private var tcTimer:Timer;
 		
 		/* Constructeur */
@@ -61,7 +60,6 @@ package com.kool_animation.mediator {
 			
 			transportView.addEventListener(TransportView.TOOGLE_FULLSCREEN, onToggleFullscreen);
 			transportView.addEventListener(TransportView.TOOGLE_SHORTPLAY, onToggleShortPlay);
-			
 		}
 		
 		/** Liste des notifications écoutés */
@@ -74,7 +72,8 @@ package com.kool_animation.mediator {
 				TakeConstant.TRANSPORT_SET_FPS,
 				TakeConstant.TRANSPORT_FPS_CHANGED,
 				TakeConstant.CURRENT_FRAME_CHANGED,
-				ProjectConstant.PREFERENCES_LOADED
+				ProjectConstant.PREFERENCES_LOADED,
+				TakeConstant.TRANSPORT_SHORT_PLAYBACK_CHANGED
 			];
 		}
 		
@@ -97,6 +96,9 @@ package com.kool_animation.mediator {
 					break;
 				case TakeConstant.CURRENT_FRAME_CHANGED:
 					currentFrameChanged ();
+					break;
+				case TakeConstant.TRANSPORT_SHORT_PLAYBACK_CHANGED:
+					onShortPlayChanged();
 					break;
 			}
 		}
@@ -132,15 +134,19 @@ package com.kool_animation.mediator {
 			sendNotification(TakeConstant.TRANSPORT_SET_PLAYBACK_QUALITY, quality); 
 		};
 		
-		
 		private function onPreferenceLoaded():void{
-
+			transportView.shortPlayCheckBox.selected=this.preferencesProxy.shortPlay;
 			
-			
+				
 			transportView.qualityComboBox.selectedIndex=this.preferencesProxy.playbackQuality;
 			var fps:Number = this.preferencesProxy.defaultFPS;
 			var index:int = transportView.fpsComboBox.dataProvider.getItemIndex(fps); 
 			transportView.fpsComboBox.selectedIndex=index;
+		}
+		
+		public function onShortPlayChanged():void{
+			
+			transportView.shortPlayCheckBox.selected=this.preferencesProxy.shortPlay;
 		}
 		
 		private function onGotoFirst (e:Event):void { sendNotification(TakeConstant.GOTO_FIRST_FRAME); }

@@ -45,17 +45,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 			
 			public function export():void{
-				if (this.filmSelection.selectedIndex==0) {
+				//if (this.filmSelection.selectedIndex==0) {
 					dispatchEvent (new Event(EXPORT_IMAGES));
-				} else {
+				/*} else {
 					dispatchEvent (new Event(EXPORT_FILM));	
-				}
+				}*/
 			}
 		]]>
 	</fx:Script>
 	<mx:VBox>
 			<mx:Spacer height="40"/>
 			<mx:HBox>
+				<!--
 				<mx:Spacer width="40"/>
 				<s:ComboBox id="filmSelection" selectedIndex="0">
 					<s:dataProvider>
@@ -64,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 							<fx:String>Movie</fx:String>
 						</mx:ArrayList>
 					</s:dataProvider>
-				</s:ComboBox>
+				</s:ComboBox>-->
 				<s:TextInput id="baseName" width="200"/>
 				<s:Button label="Export" click="export()"/>
 			</mx:HBox>

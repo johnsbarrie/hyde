@@ -39,6 +39,7 @@ package com.kool_animation.model.vo {
 		public var language:String;
 		public var playbackQuality:int;
 		public var captureNumber:int;
+		public var shortPlay:Boolean;
 		
 		public function PreferencesVO(){}
 		
@@ -46,6 +47,7 @@ package com.kool_animation.model.vo {
 			var xml:XML = <preferences/>;
 			xml.workspace=workspace;
 			xml.isFirstLaunch=isFirstLaunch;
+			
 			xml.acceptAutomaticUpdates=acceptAutomaticUpdates;
 			xml.lastVersionFoundOnline=lastVersionFoundOnline;
 			xml.cameraID=cameraID;
@@ -60,6 +62,7 @@ package com.kool_animation.model.vo {
 			xml.timelinethumbsize=TimelineStatic.timelineImageWidth;
 			xml.playbackQuality=playbackQuality;
 			xml.captureNumber=captureNumber;
+			xml.shortPlay=shortPlay;
 			return xml;
 		}
 	}

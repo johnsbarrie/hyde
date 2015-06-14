@@ -158,6 +158,5 @@ package com.kool_animation.model {
 		public function get soundProxy():SoundProxy {
 			return facade.retrieveProxy(SoundProxy.NAME) as SoundProxy;;
 		}
-		
 	}
 }

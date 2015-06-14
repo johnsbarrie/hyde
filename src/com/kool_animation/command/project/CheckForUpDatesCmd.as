@@ -51,20 +51,20 @@ package com.kool_animation.command.project {
 			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
 			var ns:Namespace = appXml.namespace();
 			
-			var urlString:String="http://hyde.kool-animation.com/version?version="+appXml.ns::versionNumber+"&system="+Capabilities.os;
+			var urlString:String = "http://hyde.kool-animation.com/version?version="+appXml.ns::versionNumber+"&system="+Capabilities.os;
 			urlReq.url = urlString;
 			urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
-			urlLoader.addEventListener("complete", onComplete);
-			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+			urlLoader.addEventListener ("complete", onComplete);
+			urlLoader.addEventListener (IOErrorEvent.IO_ERROR, errorHandler);
 			urlLoader.load(urlReq);
 		}
 		
 		private function onComplete(e:Event):void {
-			versionXML= new XML (urlLoader.data);
+			versionXML = new XML (urlLoader.data);
 			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
 			var ns:Namespace = appXml.namespace();
 			
-			if (versionXML.version> preferencesProxy.lastVersionFoundOnline) {
+			if ( (versionXML.version > preferencesProxy.lastVersionFoundOnline) && (versionXML.version>appXml.ns::versionNumber) ) {
 				var appfacade:AppFacade = AppFacade.getInstance();
 				Alert.show(appfacade.resourceManager.getString("GUI_I18NS","want_to_download_new_version"), appfacade.resourceManager.getString("GUI_I18NS","new_hyde_version")+" v."+versionXML.version+"\n"+versionXML.description, Alert.YES|Alert.NO, null, version_available, null);
 			}

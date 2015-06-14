@@ -56,6 +56,7 @@ package com.kool_animation.constant
 		public static const TRANSPORT_FPS_CHANGED:String			= "CaptureContant.transport_fps_changed"
 		public static const TRANSPORT_SET_PLAYBACK_QUALITY:String	= "TakeConstant.TRANSPORT_SET_PLAYBACK_QUALITY";
 		public static const TRANSPORT_PLAYBACK_QUALITY_CHANGED:String = "TakeConstant.PLAYBACK_QUALITY_CHANGED"
+		public static const TRANSPORT_SHORT_PLAYBACK_CHANGED:String = "TakeConstant.TRANSPORT_SHORT_PLAYBACK_CHANGED"
 		
 		public static const GOTO_NEXT_FRAME:String					= "TakeConstant.GOTO_NEXT_FRAME";
 		public static const GOTO_PREV_FRAME:String					= "TakeConstant.GOTO_PREV_FRAME";

@@ -82,6 +82,7 @@ package com.kool_animation.model {
 				xmlRoot.appendChild(new XML("<timelinethumbsize>"+80+"</timelinethumbsize>"));
 				xmlRoot.appendChild(new XML("<playbackQuality>"+0+"</playbackQuality>"));
 				xmlRoot.appendChild(new XML("<captureNumber>"+1+"</captureNumber>"));
+				xmlRoot.appendChild(new XML("<shortPlay>false</shortPlay>"));
 				
 				preferencesWriteStream.open(file, FileMode.WRITE);
 				preferencesWriteStream.writeUTFBytes(xmlRoot.toXMLString());
@@ -125,7 +126,7 @@ package com.kool_animation.model {
 			preferencesVO.language=xml.language;
 			preferencesVO.playbackQuality=Number(xml.playbackQuality);
 			preferencesVO.captureNumber=Number(xml.captureNumber);
-			
+			preferencesVO.shortPlay== "true" ? preferencesVO.shortPlay =true : preferencesVO.shortPlay =false; 
 			if (Number(xml.timelinethumbsize)!=0){
 				TimelineStatic.timelineImageWidth=Number(xml.timelinethumbsize);
 			}
@@ -258,6 +259,15 @@ package com.kool_animation.model {
 		public function set captureNumber (captureNumber:Number):void{
 			preferencesVO.captureNumber=captureNumber;
 			savePreference();
+		}
+		
+		public function set shortPlay (shortPlay:Boolean):void{
+			preferencesVO.shortPlay=shortPlay;
+			savePreference();
+		}
+		
+		public function get shortPlay():Boolean{
+			return preferencesVO.shortPlay;
 		}
 		
 		public function get captureNumber():Number{

@@ -25,7 +25,9 @@ package com.kool_animation.model {
 	import com.kool_animation.event.JJTimerEvent;
 	import com.kool_animation.model.FrameVO;
 	import com.kool_animation.tools.JJTimer;
+	
 	import mx.collections.ArrayCollection;
+	
 	import org.puremvc.as3.interfaces.IProxy;
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
@@ -41,7 +43,8 @@ package com.kool_animation.model {
 		protected var _timer:JJTimer;								// Horloge de la timeLine
 		protected var currentFrameOffset:int=0;
 		public var currentIndexBeforePlay:int=0;
-		public var shortplay:Boolean=true;
+		//public var shortplay:Boolean=true;
+		private var _preferencesProxy:PreferencesProxy;
 
 		/* Constructeur */
 		public function AbstractTimeLineProxy(proxyName:String=NAME, data:Object=null) {
@@ -71,7 +74,7 @@ package com.kool_animation.model {
 		/* Mise en lecture */
 		public function play():void {
 			if (_frames) {
-				if ( shortplay ) {
+				if (preferencesProxy.shortPlay) {
 					currentIndex = _frames.length -15;
 					if(currentIndex <0){currentIndex=0;} 
 				} else {
@@ -174,6 +177,12 @@ package com.kool_animation.model {
 				_fps = value;
 				_timer.interval = TIMEBASE / _fps;
 			}
+		}
+		
+		public function get preferencesProxy():PreferencesProxy {
+			if (!_preferencesProxy)
+				_preferencesProxy = facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy;
+			return _preferencesProxy; 
 		}
 	}
 }

@@ -5,7 +5,7 @@
  Conceived by Kolja Saksida and John Barrie 
  Coded by John Barrie  
  Further help by Xavier Boisnon
-    Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+ Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
@@ -20,23 +20,22 @@
  You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.kool_animation.command.take {
+package com.kool_animation.command.take
+{
 	import com.kool_animation.constant.TakeConstant;
-	import com.kool_animation.mediator.TransportMediator;
 	import com.kool_animation.model.PreferencesProxy;
-	import com.kool_animation.model.TakeTimeLineProxy;
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
 	
-	public class ToggleShortplayCmd extends SimpleCommand {
+	public class SetCaptureNumberCmd extends SimpleCommand
+	{
 		override public function execute(notification:INotification):void {
+			var preferencesProxy:PreferencesProxy= facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy;
+			preferencesProxy.captureNumber= notification.getBody() as Number;
 			
-			var preferencesProxy:PreferencesProxy = facade.retrieveProxy(PreferencesProxy.NAME) as PreferencesProxy;
-			preferencesProxy.shortPlay = ! preferencesProxy.shortPlay;
-			 
-			sendNotification(TakeConstant.TRANSPORT_SHORT_PLAYBACK_CHANGED);
-			//takeTimeLineProxy.shortplay = !takeTimeLineProxy.shortplay;
+			//sendNotification(TakeConstant.TRANSPORT_FPS_CHANGED);
 		}
 	}
 }
+

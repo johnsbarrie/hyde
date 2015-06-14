@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<fx:Script>
 		<![CDATA[
 			import mx.events.SliderEvent;
-			
 			import spark.events.IndexChangeEvent;
 			
 			public static const EVENT_CAPTURE:String				= "event_capture";
@@ -41,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			public static const EVENT_TOGGLE_VERTICAL_FLIP:String	= "event_toggle_vertical_flip";
 			public static const EVENT_TOGGLE_HORIZONTAL_FLIP:String	= "event_toggle_horizontal_flip";
 			public static const EVENT_CAPTURE_NUMBER_CHANGED:String	= "event_capture_number_changed";
+			
 			private function onCapture():void {
 				dispatchEvent(new Event(EVENT_CAPTURE));
 			}
