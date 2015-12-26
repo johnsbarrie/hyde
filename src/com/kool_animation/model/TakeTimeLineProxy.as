@@ -40,23 +40,29 @@ package com.kool_animation.model {
 		
 		/* Gestion des tick d'horloge de la timeline */
 		override protected function onTimerTick(te:JJTimerEvent):void {
+			
 			if (currentIndex + 1 < _frames.length) {
+				// trace("less than total frames")
 				setCurrentFrame (currentIndex+1);
 			}else if (currentIndex + 1==_frames.length && includeLiveView && !skippedCurrentFrameForLive) {
+				// trace("more than total frames")
 				sendNotification (TakeConstant.SHOW_LIVE_VIDEO);
 				skippedCurrentFrameForLive=true;
 				setCurrentFrame (currentIndex + 1);
 		    } else {
+				// trace("End if the line ");
 				skippedCurrentFrameForLive=false;
 				if (this._loop) {
 					currentIndex = 0;
 					sendNotification (TakeConstant.HIDE_LIVE_VIDEO);
-					setCurrentFrame (currentIndex);
+					
+					setCurrentFrame (currentIndex, true);
+					// sendNotification (TakeConstant.TRANSPORT_STOP);
 				} else {
-					setCurrentFrame (currentIndex);
+					setCurrentFrame (currentIndex, true);
 					sendNotification (TakeConstant.TRANSPORT_STOP);
 				}
-				_timer.reset();
+				//_timer.reset();
 			}
 		}
 		

@@ -58,12 +58,14 @@ package com.kool_animation.model {
 		
 		/* Gestion des tick d'horloge de la timeline */
 		protected function onTimerTick(te:JJTimerEvent):void {
+			
 			if (_timer.count < _frames.length)
 				setCurrentFrame(_timer.count);
 			else {
-				if (this._loop)
-					setCurrentFrame(_timer.count - _frames.length);
-				else {
+				if (this._loop){
+					trace("tick",_timer.count - _frames.length, _timer.count,  _frames.length)
+					setCurrentFrame(0);
+				}else {
 					setCurrentFrame(0);
 					stopTransport();	
 				}
@@ -116,6 +118,7 @@ package com.kool_animation.model {
 		
 		/* Selectionne la frame courante */
 		public function setCurrentFrame(index:int, force:Boolean = false):void {
+			//trace("setCurrentFrame ", index, _currentIndex);
 			if(!_frames)
 				return;
 			
@@ -136,17 +139,20 @@ package com.kool_animation.model {
 				currentFrameChanged(_currentIndex);
 			}
 			else if (index != _currentIndex){
+				
 				if ((index >= 0)&&(index < _frames.length)){
 					_currentIndex = index;
 				}
 				else
 					_currentFrame = null;
 				// Notification du changement de frame
+				
 				currentFrameChanged(_currentIndex);
 			}
 		}	
 		
-		protected function currentFrameChanged(index:int):void { 
+		protected function currentFrameChanged(index:int):void {
+			trace("index ", index);
 			sendNotification(TakeConstant.CURRENT_FRAME_CHANGED, index);
 		}
 		
@@ -169,7 +175,7 @@ package com.kool_animation.model {
 		/* SETTERS */
 		public function set frames(newframes:ArrayCollection):void {  _frames.source=newframes.source; }
 		public function set loop(value:Boolean):void { _loop = value; }
-		public function set currentIndex(value:int):void {
+		public function set currentIndex(value:int):void {	
 			_currentIndex=value; 
 		}
 		public function set fps(value:Number):void {

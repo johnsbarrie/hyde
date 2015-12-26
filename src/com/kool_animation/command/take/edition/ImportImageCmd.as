@@ -63,7 +63,7 @@ package com.kool_animation.command.take.edition {
 			//openerfile=new File("/Users/javanai/Documents/Tonto/john/shots/shot1/takes/remy_kerian/src");
 			openerfile=new File(preferencesProxy.workspaceDirectory);
 			var resourceManager:IResourceManager =AppFacade.getInstance().resourceManager
-			var txtFilter:FileFilter = new FileFilter("Image", "*.png"); 
+			var txtFilter:FileFilter = new FileFilter("Image", "*.png; *.jpg;*.jpeg;*.bmp;"); 
 			
 			openerfile.browseForOpenMultiple(resourceManager.getString('GUI_I18NS'
 				,'import_image'), [txtFilter]); 

@@ -6,7 +6,7 @@ Copyright (c) 2015 lamenagerie.
 Conceived by Kolja Saksida and John Barrie 
 Coded by John Barrie  
 Further help by Xavier Boisnon
-   Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
+Graphism and Icons by Roland Chenel, John Barrie \n Logo Jaro Jelovac
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by
@@ -89,7 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					btonPlay.setStyle("chromeColor","#3C3C3C");
 				}
 			}
-
+			
 			private function onFirst():void {
 				dispatchEvent(new Event(EVENT_GOTO_FIRST));				
 			}
@@ -113,7 +113,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			private function onLoop():void {
 				dispatchEvent(new Event(EVENT_SWITCH_LOOP));
 			}
-	
+			
 			private function fpsChanged(event:IndexChangeEvent):void {
 				var fps:String=String(fpsComboBox.selectedItem);
 				dispatchEvent(new DataEvent(EVENT_FPS_CHANGED, false, false, fps));
@@ -133,62 +133,76 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 		]]>
 	</fx:Script>
-		<s:HGroup width="100%" verticalAlign="middle" gap="-1" focusEnabled="false">
-			<s:Label id="tctext" text="Time : 00h:00m:00s:00ms -- Frame : 0" width="300" color="#FFFFFF"/>
-			<s:BitmapImage id="shortPlay" width="20" height="20"  source="@Embed(source='assets/pictos/play_over.png')" alpha=".8"/>
-			<s:CheckBox id="shortPlayCheckBox" focusEnabled="false" selected="true" click="toogleShortPlay()" toolTip="{resourceManager.getString('GUI_I18NS', 'short_playback')}"/>
-			<s:Spacer width="10"/>
-			<s:BitmapImage id="camera" width="20" height="20"  source="@Embed(source='assets/pictos/camera.png')" alpha=".8"/>
-			<s:CheckBox id="includeLiveViewCheckBox" focusEnabled="false" selected="true" click="toogleIncludeLiveView()" toolTip="{resourceManager.getString('GUI_I18NS', 'include_liveview')}"/>
-			<s:Spacer width="10"/>
-			<mx:Button id="btonFirst" click="onFirst()" fontSize="12" x="330" toolTip="{resourceManager.getString('GUI_I18NS'
-					   ,'first_frame')}" focusEnabled="false" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
-					  icon="@Embed(source='assets/pictos/start_over.png')" width="30"/>
-			<mx:Button id="btonStepbackward"  click="onStepbackward()" fontSize="12" focusEnabled="false" 
-					   toolTip="{resourceManager.getString('GUI_I18NS' ,'previous')}" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
-					  icon="@Embed(source='assets/pictos/back_over.png')" width="30"/>
-			<mx:Button id="btonPlay" click="onPlay()" fontSize="12" x="330" focusEnabled="false" 
-					   toolTip="{resourceManager.getString('GUI_I18NS' ,'play')}" chromeColor="#3C3C3C" cornerRadius="0" height="30" color="#FFFFFF" 
-					   icon="{(playing)?imgPauseClass:imgPlayClass}" width="30"/>
-			<mx:Button id="btonStepForward" click="onStepForward()" 
-					   toolTip="{resourceManager.getString('GUI_I18NS','next')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
-					  icon="@Embed(source='assets/pictos/forward_over.png')" cornerRadius="0" height="30"/>
-			<mx:Button id="btonLast" click="onLast()" toolTip="{resourceManager.getString('GUI_I18NS'
-					   ,'end_frame')}" fontSize="11" x="330" width="30" focusEnabled="false" 
-					  icon="@Embed(source='assets/pictos/end_over.png')" cornerRadius="0" height="30" chromeColor="#3C3C3C"/>
-			<mx:Button id="btonLoop" click="onLoop()" toolTip="{resourceManager.getString('GUI_I18NS'
-					   ,'loop')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
-					  icon="@Embed(source='assets/pictos/loop_over.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
-			<s:Label text="fps" paddingLeft="5" color="#FFFFFF" height="30" verticalAlign="middle" paddingRight="5"/>
-			<s:DropDownList id="fpsComboBox" selectedIndex="1" width="70" focusEnabled="false" change="fpsChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','fps')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
-				<s:dataProvider>
-					<mx:ArrayList>
-						<fx:Number>4</fx:Number>
-						<fx:Number>6</fx:Number>
-						<fx:Number>8</fx:Number>
-						<fx:Number>12</fx:Number>
-						<fx:Number>12.5</fx:Number>
-						<fx:Number>24</fx:Number>
-						<fx:Number>25</fx:Number>
-						<fx:Number>40</fx:Number>
-						<fx:Number>50</fx:Number>
-						<fx:Number>60</fx:Number>
-					</mx:ArrayList>
-				</s:dataProvider>
-			</s:DropDownList>
-			<s:Spacer width="10"/>
-			<s:DropDownList id="qualityComboBox" selectedIndex="0" width="70" focusEnabled="false" change="playbackQualityChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','playBackQuality')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
-				<s:dataProvider>
-					<mx:ArrayList>
-						<fx:String>High</fx:String>
-						<fx:String>Low</fx:String>
-					</mx:ArrayList>
-				</s:dataProvider>
-			</s:DropDownList>
-			<s:Spacer width="40"/>
-			<mx:Button id="btonToggle" click="onFullscreen()" toolTip="{resourceManager.getString('GUI_I18NS'
-					   ,'fullscreen')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
-								  icon="@Embed(source='assets/pictos/fullscreen.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
-			
-		</s:HGroup>
+	<s:HGroup width="100%" verticalAlign="middle" gap="-1" focusEnabled="false">
+		<s:Label id="tctext" text="Time : 00h:00m:00s:00ms -- Frame : 0" width="300" color="#FFFFFF"/>
+		<s:Group>
+			<s:Rect width="100%" height="100%">
+				<s:fill><s:SolidColor color="0x999999" /></s:fill>
+			</s:Rect>
+			<s:HGroup >
+				<s:BitmapImage id="shortPlay" width="20" height="20"  source="@Embed(source='assets/pictos/play_over.png')" alpha=".8"/>
+				<s:CheckBox id="shortPlayCheckBox" focusEnabled="false" selected="true" click="toogleShortPlay()" toolTip="{resourceManager.getString('GUI_I18NS', 'short_playback')}"/>
+			</s:HGroup>
+		</s:Group>
+		<s:Spacer width="10"/>
+		<s:Group>
+			<s:Rect width="100%" height="100%">
+				<s:fill><s:SolidColor color="0x999999" /></s:fill>
+			</s:Rect>
+			<s:HGroup>
+				<s:BitmapImage id="camera" width="20" height="20"  source="@Embed(source='assets/pictos/camera.png')" alpha=".8"/>
+				<s:CheckBox id="includeLiveViewCheckBox" focusEnabled="false" selected="true" click="toogleIncludeLiveView()" toolTip="{resourceManager.getString('GUI_I18NS', 'include_liveview')}"/>
+			</s:HGroup>
+		</s:Group>
+		<s:Spacer width="10"/>
+		<mx:Button id="btonFirst" click="onFirst()" fontSize="12" x="330" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'first_frame')}" focusEnabled="false" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
+									 icon="@Embed(source='assets/pictos/start_over.png')" width="30"/>
+		<mx:Button id="btonStepbackward"  click="onStepbackward()" fontSize="12" focusEnabled="false" 
+				   toolTip="{resourceManager.getString('GUI_I18NS' ,'previous')}" chromeColor="#3C3C3C" height="30" color="#FFFFFF" cornerRadius="0"
+				   icon="@Embed(source='assets/pictos/back_over.png')" width="30"/>
+		<mx:Button id="btonPlay" click="onPlay()" fontSize="12" x="330" focusEnabled="false" 
+				   toolTip="{resourceManager.getString('GUI_I18NS' ,'play')}" chromeColor="#3C3C3C" cornerRadius="0" height="30" color="#FFFFFF" 
+				   icon="{(playing)?imgPauseClass:imgPlayClass}" width="30"/>
+		<mx:Button id="btonStepForward" click="onStepForward()" 
+				   toolTip="{resourceManager.getString('GUI_I18NS','next')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+				   icon="@Embed(source='assets/pictos/forward_over.png')" cornerRadius="0" height="30"/>
+		<mx:Button id="btonLast" click="onLast()" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'end_frame')}" fontSize="11" x="330" width="30" focusEnabled="false" 
+								   icon="@Embed(source='assets/pictos/end_over.png')" cornerRadius="0" height="30" chromeColor="#3C3C3C"/>
+		<mx:Button id="btonLoop" click="onLoop()" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'loop')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+							  icon="@Embed(source='assets/pictos/loop_over.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
+		<s:Label text="fps" paddingLeft="5" color="#FFFFFF" height="30" verticalAlign="middle" paddingRight="5"/>
+		<s:DropDownList id="fpsComboBox" selectedIndex="1" width="70" focusEnabled="false" change="fpsChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','fps')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
+			<s:dataProvider>
+				<mx:ArrayList>
+					<fx:Number>4</fx:Number>
+					<fx:Number>6</fx:Number>
+					<fx:Number>8</fx:Number>
+					<fx:Number>12</fx:Number>
+					<fx:Number>12.5</fx:Number>
+					<fx:Number>24</fx:Number>
+					<fx:Number>25</fx:Number>
+					<fx:Number>40</fx:Number>
+					<fx:Number>50</fx:Number>
+					<fx:Number>60</fx:Number>
+				</mx:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList>
+		<s:Spacer width="10"/>
+		<s:DropDownList id="qualityComboBox" selectedIndex="0" width="70" focusEnabled="false" change="playbackQualityChanged(event)" toolTip="{resourceManager.getString('GUI_I18NS','playBackQuality')}" chromeColor="#3C3C3C" height="20" color="#FFFFFF" borderVisible="true" dropShadowVisible="true" rollOverColor="#6A6A6A" selectionColor="#2C2C2C" contentBackgroundColor="#3A3939">
+			<s:dataProvider>
+				<mx:ArrayList>
+					<fx:String>High</fx:String>
+					<fx:String>Low</fx:String>
+				</mx:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList>
+		<s:Spacer width="40"/>
+		<mx:Button id="btonToggle" click="onFullscreen()" toolTip="{resourceManager.getString('GUI_I18NS'
+				   ,'fullscreen')}" fontSize="11" x="330" width="30" focusEnabled="false" chromeColor="#3C3C3C"
+									icon="@Embed(source='assets/pictos/fullscreen.png')" cornerRadius="0" height="30" focusColor="#FFFFFF"/>
+		
+	</s:HGroup>
 </s:BorderContainer>

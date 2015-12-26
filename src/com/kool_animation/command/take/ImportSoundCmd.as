@@ -21,12 +21,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.kool_animation.command.take {
+	import com.kool_animation.AppFacade;
 	import com.kool_animation.model.DiskPathsProxy;
 	import com.kool_animation.model.SoundProxy;
 	
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
+	
+	import mx.resources.IResourceManager;
 	
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
@@ -37,7 +40,8 @@ package com.kool_animation.command.take {
 		override public function execute(notification:INotification):void {
 			file= new File();
 			file.addEventListener(Event.SELECT, onFileSelected);
-			file.browse([new FileFilter("Images", "*.mp3;")]);
+			var resourceManager:IResourceManager= AppFacade.getInstance().resourceManager;
+			file.browse([new FileFilter(resourceManager.getString('GUI_I18NS', "Sound"), "*.mp3;")]);
 		}
 		
 		private function onFileSelected(event:Event):void {
