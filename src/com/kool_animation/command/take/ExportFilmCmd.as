@@ -24,25 +24,22 @@ package com.kool_animation.command.take {
 	import com.kool_animation.AppFacade;
 	import com.kool_animation.model.DiskPathsProxy;
 	import com.kool_animation.model.FrameVO;
-	import com.kool_animation.model.SoundProxy;
 	import com.kool_animation.model.TakeTimeLineProxy;
 	import com.kool_animation.mxml.window.ExportationWindow;
-	import com.kool_animation.tools.FileStreamFlvEncoder;
-	import com.kool_animation.tools.FlvEncoder;
-	import com.kool_animation.tools.VideoPayloadMakerAlchemy;
 	
-	import flash.display.BitmapData;
-	import flash.display.Loader;
+	import flash.desktop.NativeProcess;
+	import flash.desktop.NativeProcessStartupInfo;
 	import flash.events.Event;
+	import flash.events.NativeProcessExitEvent;
+	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-	import flash.geom.Matrix;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
-	import flash.utils.setTimeout;
 	
+	import mx.controls.Alert;
 	import mx.managers.PopUpManager;
 	import mx.resources.IResourceManager;
 	
@@ -55,21 +52,19 @@ package com.kool_animation.command.take {
 		private var exportImageIndex:int=0;
 		private var takeTimeLineProxy:TakeTimeLineProxy;
 		private var fileBaseName:String;
+		private var imageDirectory:File;
+		private var videoDirectory:File;
 		private var exportTimer:Timer=new Timer(1,0);
-		private var fsFlvEncoder:FileStreamFlvEncoder;
-		private var photodata:ByteArray ;
-		private var loader:Loader;
-		private var filmFile:File;
-		private var soundByteArray:ByteArray
 		
 		override public function execute(notification:INotification):void {
 			fileBaseName = notification.getBody() as String;
-			if (!fileBaseName) {
-				var diskPathProxy:DiskPathsProxy = facade.retrieveProxy(DiskPathsProxy.NAME) as DiskPathsProxy;
+			if(!fileBaseName){
+				var diskPathProxy:DiskPathsProxy= facade.retrieveProxy(DiskPathsProxy.NAME) as DiskPathsProxy;
 				fileBaseName = diskPathProxy.projectName+"_"+diskPathProxy.shotName+"_"+ diskPathProxy.takeName;
 			}
+			
 			this.resourceManager= AppFacade.getInstance().resourceManager;
-			var dialog:File= new File();
+			var dialog:File= File.desktopDirectory;
 			dialog.addEventListener(Event.SELECT, directorySelected);
 			dialog.addEventListener(Event.CANCEL, canceled);
 			
@@ -82,6 +77,7 @@ package com.kool_animation.command.take {
 			exportationInProgressWindow = new ExportationWindow();
 			exportationInProgressWindow.width = 250;
 			exportationInProgressWindow.height = 150;
+			
 			exportationInProgressWindow.title = resourceManager.getString('GUI_I18NS', 'export_in_progress');
 			exportationInProgressWindow.setStyle("modalTrasparancy",0.2);
 			exportationInProgressWindow.setStyle("modalTransparencyBlur",5);
@@ -101,84 +97,114 @@ package com.kool_animation.command.take {
 		
 		private function directorySelected(event:Event):void  {
 			var directory:File= event.target as File;
-			filmFile=new File(directory.url+"/"+fileBaseName+".flv");
+			videoDirectory=new File(directory.url);
+			videoDirectory.createDirectory();
+			imageDirectory= videoDirectory.resolvePath(directory.url+"/"+fileBaseName);
+			imageDirectory.createDirectory();
 			
 			takeTimeLineProxy= facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;
 			startExporting();
 		}
 		
 		private function startExporting():void {
-			fsFlvEncoder = new FileStreamFlvEncoder(filmFile, takeTimeLineProxy.fps);
-			fsFlvEncoder.fileStream.openAsync(filmFile, FileMode.WRITE);
-			fsFlvEncoder.setVideoProperties(1280, 720, VideoPayloadMakerAlchemy);
+			exportImage(0);
+			exportTimer.addEventListener(TimerEvent.TIMER, exportTick);	
+			exportTimer.start();
 			
-			if (soundProxy.sound) {
-				soundByteArray = new ByteArray();
-				soundProxy.sound.extract(soundByteArray, soundProxy.sound.length / 1000 * FlvEncoder.SAMPLERATE_44KHZ, 0);            
-				soundByteArray.position = 0;
-				fsFlvEncoder.setAudioProperties(FlvEncoder.SAMPLERATE_44KHZ, true, true,true);
-			}
-			
-			fsFlvEncoder.start();
-			addImage();
 		}
 		
-		private function addImage():void {
+		private function exportTick(evt:TimerEvent):void {
 			exportImageIndex++;
-			if (exportImageIndex<takeTimeLineProxy.frames.length){
-				var frameVO:FrameVO=FrameVO(takeTimeLineProxy.frames.getItemAt(exportImageIndex));
-				var viewByteArray:ByteArray=frameVO.viewByteArray;
-				
-				var percentage:Number = Math.ceil(exportImageIndex/takeTimeLineProxy.frames.length*100);
-				exportationInProgressWindow.exportProgressBar.label="Percentage : " + percentage + "%";
-				var bmpData:BitmapData = new BitmapData(1280, 720, false, 0x000000);
-				var matrix:Matrix = new Matrix();
-				
-				var loader:Loader = new Loader();
-				loader.contentLoaderInfo.addEventListener(Event.INIT, function(e:Event):void {
-					bmpData.draw(loader, matrix,null,null,null,true);
-					if(soundProxy.sound){
-						var newBytes:ByteArray = new ByteArray();
-						if ((exportImageIndex+1)*fsFlvEncoder.audioFrameSize < soundByteArray.length) {
-							newBytes.writeBytes(soundByteArray, exportImageIndex*fsFlvEncoder.audioFrameSize, fsFlvEncoder.audioFrameSize);
-						}
-						
-						newBytes.position=0;
-						fsFlvEncoder.addFrame(bmpData, newBytes);
-					}else{
-						fsFlvEncoder.addFrame(bmpData, null);
-					}
-					setTimeout(	addImage, 1);
-				});
-				loader.loadBytes(viewByteArray);
-			} else {
-				exportationInProgressWindow.exportProgressBar.label="Percentage : 100%";
-				fsFlvEncoder.updateDurationMetadata();
-				fsFlvEncoder.fileStream.close();
-				fsFlvEncoder.kill();
-				removePopup();
+			if(exportImageIndex<takeTimeLineProxy.frames.length){
+				exportImage(exportImageIndex);
+			}else{
+				exportTimer.stop();
+				exportVideo();
 			}
 		}
-		/*
-		private function startListener(e:Event):void {
-			exportationInProgressWindow.exportProgressBar.label="Percentage : " + Math.ceil((i/totalFrames)*100).toString()+"%";
-			var content:* = loader.content;
-			var bmpData:BitmapData = new BitmapData(1280, 720, false, 0x000000);
-			var matrix:Matrix = new Matrix();
-			bmpData.draw(content, matrix,null,null,null,true);
-			if(soundProxy.sound){
-				var newBytes:ByteArray = new ByteArray();
-				if ((i+1)*fsFlvEncoder.audioFrameSize < soundByteArray.length) {
-					newBytes.writeBytes(soundByteArray, i*fsFlvEncoder.audioFrameSize, fsFlvEncoder.audioFrameSize);
-				}
-				
-				newBytes.position=0;
-				fsFlvEncoder.addFrame(bmpData, newBytes);
-			}
-			fsFlvEncoder.addFrame(bmpData, null);
-			setTimeout(	addImage, 1);				
-		}*/
 		
+		private function exportImage(index:int):void{
+			var frameVO:FrameVO=FrameVO(takeTimeLineProxy.frames.getItemAt(index));
+			var viewByteArray:ByteArray=frameVO.viewByteArray;
+			
+			var i:int=index+1;
+			exportationInProgressWindow.exportProgressBar.setProgress(i/takeTimeLineProxy.frames.length*100/2, 100);
+			exportationInProgressWindow.exportProgressBar.label=resourceManager.getString('GUI_I18NS'
+				,'exported')+" "+ int(50+i/takeTimeLineProxy.frames.length*100/2)+"%";
+			var photoFile:File = new File(imageDirectory.url+"/"+fileBaseName+getDigits(i, 5)+".png");
+			var photoStream:FileStream = new FileStream();
+			if(viewByteArray) {
+				photoStream.open(photoFile, FileMode.WRITE);
+				photoStream.writeBytes(viewByteArray, 0, viewByteArray.length);
+				photoStream.close();	
+			}else{
+				var blankFile:File = new File ("app:/assets/blank1280x720.png");
+				if(blankFile.exists){
+					blankFile.copyToAsync(photoFile, true);
+				}
+			}
+		}
+
+		private var process:NativeProcess;
+		private var bytes:ByteArray = new ByteArray();
+		private var resultExportVideo:String="";
+		private var progressValue:Number=0;
+		
+		private function exportVideo():void {
+			var nativeProcessStartupInfo:NativeProcessStartupInfo = new NativeProcessStartupInfo(); 
+			var file:File = File.applicationDirectory.resolvePath("assets/native_apps/ffmpeg"); 
+
+			nativeProcessStartupInfo.executable = file; 
+			var processArgs:Vector.<String> = new Vector.<String>(); 
+			// -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+			processArgs.push("-i"); 
+			var imagePath:String=imageDirectory.url +"/"+fileBaseName+ "%05d.png";
+			processArgs.push(imageDirectory.url +"/"+fileBaseName+ "%05d.png"); 
+			processArgs.push("-c:v"); 
+			processArgs.push("libx264"); 
+			processArgs.push("-pix_fmt"); 
+			processArgs.push("yuv420p"); 
+			
+			var videoFile:File = videoDirectory.resolvePath( fileBaseName+ ".mp4");
+			if(videoFile.exists && ! videoFile.isDirectory) {
+				videoFile.deleteFile()	
+			}
+			
+			
+			processArgs.push(videoDirectory.resolvePath( fileBaseName+ ".mp4").url); 
+			nativeProcessStartupInfo.arguments = processArgs;
+			nativeProcessStartupInfo.workingDirectory = File.documentsDirectory; 
+			process = new NativeProcess();
+			process.addEventListener(ProgressEvent.STANDARD_ERROR_DATA, errorDataHandler); 
+			process.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, dataHandler); 
+			process.addEventListener(NativeProcessExitEvent.EXIT, onExit);
+			process.start(nativeProcessStartupInfo);
+		}
+
+		private function onExit(e:NativeProcessExitEvent):void 
+		{
+			trace("Conversion complete.");
+			process.exit();
+			imageDirectory.deleteDirectory(true);
+			removePopup();
+		}
+		
+		private function dataHandler(event:ProgressEvent):void 
+		{ 
+			resultExportVideo=(process.standardOutput.readUTFBytes(process.standardOutput.bytesAvailable)); 
+		}
+		
+		private function errorDataHandler(event:ProgressEvent):void 
+		{ 
+			resultExportVideo=(process.standardError.readUTFBytes(process.standardError.bytesAvailable)); 
+			progressValue+=5;
+			exportationInProgressWindow.exportProgressBar.setProgress(50+ progressValue/takeTimeLineProxy.frames.length*100/2, 100);
+			exportationInProgressWindow.exportProgressBar.label=resourceManager.getString('GUI_I18NS'
+				,'exported')+" "+ int(50+progressValue/takeTimeLineProxy.frames.length*100/2)+"%";
+			//Alert.show(resultExportVideo);
+		}
+		
+
 		private function getDigits(num:int, numdigits:int):String{
 			var digitlength:int= numdigits-String(num).length;
 			var zeroStr:String="";
@@ -187,8 +213,6 @@ package com.kool_animation.command.take {
 			}
 			return zeroStr+num;	
 		}
-		
-		public function get soundProxy():SoundProxy { return facade.retrieveProxy(SoundProxy.NAME) as SoundProxy; }
-		
 	}
 }
+

@@ -4,8 +4,8 @@
 	<id>com.lamenagerie.hyde</id>
 	<filename>Hyde Stop Motion</filename>
 	<name>Hyde Stop Motion</name>
-	<versionNumber>1.0.8</versionNumber>
-	<versionLabel>1.0.8</versionLabel>
+	<versionNumber>1.0.9</versionNumber>
+	<versionLabel>1.0.9</versionLabel>
 	<copyright>La Ménagerie and Zvviks</copyright>
 	<initialWindow>
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>

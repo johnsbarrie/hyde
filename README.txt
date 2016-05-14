@@ -4,4 +4,4 @@ yes you guessed it ! … for making stop motion films.
 
 Go to http://hyde.kool-animation.com for more information
 
-Version 1.0.8
+Version 1.0.9
