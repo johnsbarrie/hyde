@@ -39,6 +39,7 @@ package com.kool_animation.command.take {
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
+	import com.kool_animation.model.ProjectProxy;
 	import mx.controls.Alert;
 	import mx.managers.PopUpManager;
 	import mx.resources.IResourceManager;
@@ -96,11 +97,13 @@ package com.kool_animation.command.take {
 		}
 		
 		private function directorySelected(event:Event):void  {
-			var directory:File= event.target as File;
+			var directory:File = event.target as File;
 			videoDirectory=new File(directory.url);
 			videoDirectory.createDirectory();
-			imageDirectory= videoDirectory.resolvePath(directory.url+"/"+fileBaseName);
+			imageDirectory= new File(directory.url+"/"+fileBaseName);
 			imageDirectory.createDirectory();
+			
+			//trace("directory ", directory.url);
 			
 			takeTimeLineProxy= facade.retrieveProxy(TakeTimeLineProxy.NAME) as TakeTimeLineProxy;
 			startExporting();
@@ -109,8 +112,7 @@ package com.kool_animation.command.take {
 		private function startExporting():void {
 			exportImage(0);
 			exportTimer.addEventListener(TimerEvent.TIMER, exportTick);	
-			exportTimer.start();
-			
+			exportTimer.start();	
 		}
 		
 		private function exportTick(evt:TimerEvent):void {
@@ -132,12 +134,14 @@ package com.kool_animation.command.take {
 			exportationInProgressWindow.exportProgressBar.label=resourceManager.getString('GUI_I18NS'
 				,'exported')+" "+ int(50+i/takeTimeLineProxy.frames.length*100/2)+"%";
 			var photoFile:File = new File(imageDirectory.url+"/"+fileBaseName+getDigits(i, 5)+".png");
+			
 			var photoStream:FileStream = new FileStream();
 			if(viewByteArray) {
 				photoStream.open(photoFile, FileMode.WRITE);
 				photoStream.writeBytes(viewByteArray, 0, viewByteArray.length);
 				photoStream.close();	
-			}else{
+				
+			} else {
 				var blankFile:File = new File ("app:/assets/blank1280x720.png");
 				if(blankFile.exists){
 					blankFile.copyToAsync(photoFile, true);
@@ -158,20 +162,25 @@ package com.kool_animation.command.take {
 			var processArgs:Vector.<String> = new Vector.<String>(); 
 			// -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
 			processArgs.push("-i"); 
+			
+			var projectProxy:ProjectProxy= facade.retrieveProxy(ProjectProxy.NAME) as ProjectProxy;
+			
 			var imagePath:String=imageDirectory.url +"/"+fileBaseName+ "%05d.png";
-			processArgs.push(imageDirectory.url +"/"+fileBaseName+ "%05d.png"); 
+			processArgs.push(imageDirectory.url +"/"+fileBaseName+ "%05d.png");
+			processArgs.push("-r");
+			processArgs.push("12");
+			
 			processArgs.push("-c:v"); 
 			processArgs.push("libx264"); 
 			processArgs.push("-pix_fmt"); 
 			processArgs.push("yuv420p"); 
 			
 			var videoFile:File = videoDirectory.resolvePath( fileBaseName+ ".mp4");
-			if(videoFile.exists && ! videoFile.isDirectory) {
-				videoFile.deleteFile()	
-			}
+			if (videoFile.exists && ! videoFile.isDirectory) { videoFile.deleteFile(); }
 			
+			var videoURL:String = videoDirectory.resolvePath( fileBaseName+ ".mp4").url;
 			
-			processArgs.push(videoDirectory.resolvePath( fileBaseName+ ".mp4").url); 
+			processArgs.push(videoURL); 
 			nativeProcessStartupInfo.arguments = processArgs;
 			nativeProcessStartupInfo.workingDirectory = File.documentsDirectory; 
 			process = new NativeProcess();
@@ -183,7 +192,7 @@ package com.kool_animation.command.take {
 
 		private function onExit(e:NativeProcessExitEvent):void 
 		{
-			trace("Conversion complete.");
+			
 			process.exit();
 			imageDirectory.deleteDirectory(true);
 			removePopup();

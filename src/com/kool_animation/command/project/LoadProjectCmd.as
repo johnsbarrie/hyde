@@ -34,12 +34,11 @@ package com.kool_animation.command.project
 	import org.puremvc.as3.interfaces.INotification;
 	import org.puremvc.as3.patterns.command.SimpleCommand;
 	
-	public class LoadProjectCmd extends SimpleCommand
-	{
+	public class LoadProjectCmd extends SimpleCommand {
 		override public function execute(notification:INotification):void {
 			var diskPathsProxy:DiskPathsProxy = facade.retrieveProxy(DiskPathsProxy.NAME) as DiskPathsProxy;
 			var projectFile:File=new File (diskPathsProxy.projectFilePath);
-			if(projectFile.exists){
+			if(projectFile.exists) {
 				var projectFileStream:FileStream= new FileStream();
 				projectFileStream.open(projectFile, FileMode.READ);
 				var xml:XML = new XML();
@@ -51,7 +50,6 @@ package com.kool_animation.command.project
 				projectProxy.imageWidth = xml.width
 				projectProxy.fps = xml.fps;
 			}
-			
 		}
 	}
 }

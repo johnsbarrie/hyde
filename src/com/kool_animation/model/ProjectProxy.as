@@ -20,9 +20,7 @@
  You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.kool_animation.model
-{	
-	
+package com.kool_animation.model {	
 	import org.puremvc.as3.interfaces.IProxy;
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
