@@ -1,4 +1,4 @@
-Hyde Stop Motion
+#Hyde Stop Motion
 Hype Stop Motion is a simple application for .... 
 yes you guessed it ! … for making stop motion films.
 
